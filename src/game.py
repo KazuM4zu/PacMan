@@ -27,8 +27,8 @@ class Game:
 
     def print_game(self):
         north = [1, 3, 5, 7, 9, 11, 13, 15]
-        south = [4, 5, 6, 7, 12, 13, 14, 15]
         est = [2, 3, 6, 7, 10, 11, 14, 15]
+        south = [4, 5, 6, 7, 12, 13, 14, 15]
         west = [8, 9, 10, 11, 12, 13, 14, 15]
 
         for y in range(self.size[0]):
@@ -50,17 +50,10 @@ class Game:
                     arcade.draw_line(c1[0], c1[1], c3[0], c3[1], arcade.color.WHITE, 1)
                 if self.maze[y][x] in west:
                     arcade.draw_line(c0[0], c0[1], c2[0], c2[1], arcade.color.WHITE, 1)
-        
-        arcade.draw_circle_filled(0, 0, 3, arcade.color.RED)
-
-                
-                
 
 
-
-
-window = arcade.Window(900, 950, "Pac-Man")
-grrr = Game((15,15), 69, (900, 950))
+window = arcade.Window(500, 520, "Pac-Man")
+grrr = Game((15,15), 69, (500, 520))
 grrr.generate_maze()
 grrr.print_game()
 arcade.run()
