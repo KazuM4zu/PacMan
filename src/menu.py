@@ -1,5 +1,6 @@
 import arcade
 import arcade.gui as gui
+import arcade.key as key
 from game import GameView
 import pyglet
 
@@ -22,6 +23,7 @@ class SettingView(arcade.View):
 
         self.top_anchor = self.manager.add(gui.UIAnchorLayout())
         self.top_anchor.add(
+            anchor_x="left",
             anchor_y="top",
             child=self.top_grid,
         )
@@ -36,6 +38,7 @@ class SettingView(arcade.View):
     def on_draw(self):
         self.clear()
         self.manager.draw()
+
 
 class MenuView(arcade.View):
 
@@ -62,7 +65,8 @@ class MenuView(arcade.View):
         @exit_button.event("on_click")
         def on_click_exit_button(event):
             arcade.exit()
-
+        
+        
         self.grid = gui.UIGridLayout(
             column_count=2, row_count=3, horizontal_spacing=20,
             vertical_spacing=20
@@ -95,6 +99,26 @@ class MenuView(arcade.View):
         self.clear()
         self.manager.draw()
 
+
+#class SubMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
+#    def __init__(self,):
+#        super().__init__(size_hint=(1, 1))
+        
+#        frame = self.add(gui.UIAnchorLayout(width=300, height=400,
+#                                            size_hint=None))
+#        frame.with_padding(all=20)
+
+#        frame.with_background(
+#            texture=gui.NinePatchTexture(
+#                left=7,
+#                right=7,
+#                bottom=7,
+#                top=7,
+#                texture=arcade.load_texture(
+#                        ":resources:gui_basic_assets/window/dark_blue_gray_panel.png"
+#                    ),
+#            )
+#        )
 
 def main():
     window = arcade.Window(500, 520, "Pacman - Menu")
