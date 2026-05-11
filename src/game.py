@@ -2,6 +2,7 @@ from map import Map
 from player import Player
 import arcade
 
+
 class GameView(arcade.View):
     def __init__(self):
         super().__init__()
@@ -13,14 +14,13 @@ class GameView(arcade.View):
         self.map.generate_maze()
 
         self.player = Player()
-        
 
     def on_draw(self):
         self.clear()
         self.map.draw()
 
-
-window = arcade.Window(500, 520, "Pac-Man")
-grr = GameView()
-window.show_view(grr)
-arcade.run()
+if __name__ == "__main__":
+    window = arcade.Window(500, 520, "Pac-Man")
+    grr = GameView()
+    window.show_view(grr)
+    arcade.run()

@@ -2,6 +2,7 @@ from mazegenerator.mazegenerator import MazeGenerator
 import math
 import arcade
 
+
 class Map:
     def __init__(self):
         self.first_game = True
@@ -44,12 +45,16 @@ class Map:
                       (self.win[1] - self.margin[0] - self.cell * (y + 1)))
 
                 if self.maze[y][x] in north:
-                    arcade.draw_line(c0[0], c0[1], c1[0], c1[1], arcade.color.WHITE, 1)
+                    arcade.draw_line(c0[0], c0[1], c1[0], c1[1],
+                                     arcade.color.WHITE, 1)
                 if self.maze[y][x] in south:
-                    arcade.draw_line(c2[0], c2[1], c3[0], c3[1], arcade.color.WHITE, 1)
+                    arcade.draw_line(c2[0], c2[1], c3[0], c3[1],
+                                     arcade.color.WHITE, 1)
                 if self.maze[y][x] in est:
-                    arcade.draw_line(c1[0], c1[1], c3[0], c3[1], arcade.color.WHITE, 1)
+                    arcade.draw_line(c1[0], c1[1], c3[0], c3[1],
+                                     arcade.color.WHITE, 1)
                 if self.maze[y][x] in west:
-                    arcade.draw_line(c0[0], c0[1], c2[0], c2[1], arcade.color.WHITE, 1)
+                    arcade.draw_line(c0[0], c0[1], c2[0], c2[1],
+                                     arcade.color.WHITE, 1)
                 if self.maze[y][x] == 15:
                     arcade.draw_lbwh_rectangle_filled(c0[0], c2[1], (c1[0] - c0[0]), (c0[1] - c2[1]), arcade.color.BLUE)
