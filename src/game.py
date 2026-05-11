@@ -31,11 +31,15 @@ class EscapeMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         back_button = gui.UIFlatButton(text="Return to the game", width=250)
         back_button.on_click = self.on_click_back_button
 
+        settings_button = gui.UIFlatButton(text="Settings", width=250)
+        settings_button.on_click = self.on_click_settings_button
+
         exit_button = gui.UIFlatButton(text="Exit to menu", width=250)
         exit_button.on_click = self.on_click_exit_button
 
         widget_layout = gui.UIBoxLayout(align="left", space_between=10)
         widget_layout.add(pause_label)
+        widget_layout.add(settings_button)
         widget_layout.add(back_button)
         widget_layout.add(exit_button)
         frame.add(child=widget_layout, anchor_x="center_x", anchor_y="top")
@@ -48,6 +52,13 @@ class EscapeMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         from menu import MenuView
         menu_view = MenuView()
         self.game_view.window.show_view(menu_view)
+    
+    def on_click_settings_button(self, event):
+        if not self.game_view.settings_menu:
+            from settings import SettingsSubMenu
+            self.game_view.settings_menu = SettingsSubMenu(self.game_view)
+            self.game_view.manager.add(self.game_view.settings_menu, layer=2)
+            
 
 
 class GameView(arcade.View):
@@ -61,6 +72,7 @@ class GameView(arcade.View):
         self.map.generate_maze()
         self.manager = gui.UIManager()
         self.escape_menu = None
+        self.settings_menu = None
 
         self.player = Player()
 

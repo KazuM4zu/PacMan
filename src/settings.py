@@ -102,5 +102,9 @@ class SettingsSubMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         def on_click_back_button(event):
             self.parent.remove(self)
             self.menu_view.settings_menu = None
+        
+        @self.toggle.event("on_click")
+        def on_toggle_fullscreen(event):
+            self.menu_view.window.set_fullscreen(self.toggle.value)
 
         self.frame.add(child=self.widget_layout, anchor_x="center_x", anchor_y="center_y")
