@@ -65,14 +65,3 @@ class MenuView(arcade.View):
     def on_draw(self):
         self.clear()
         self.manager.draw()
-
-
-def main():
-    window = arcade.Window(500, 520, "Pacman - Menu")
-    menu_view = MenuView()
-    window.show_view(menu_view)
-    arcade.run()
-
-
-if __name__ == "__main__":
-    main()

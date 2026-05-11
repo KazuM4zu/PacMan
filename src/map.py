@@ -4,14 +4,19 @@ import arcade
 
 
 class Map:
-    def __init__(self):
+    def __init__(self, size, win):
         self.first_game = True
 
-        self.size = ()
+        self.size = size
         self.seed = 0
-        self.win = ()
+        self.win = win
+        ref = self.win[0] if self.win[0] < self.win[1] else self.win[1]
+        self.cell = int(math.floor((ref - (2 * 5)) / self.size[0]))
+        self.margin = (int((self.win[0] - self.size[0] * self.cell) / 2),
+                       int(self.win[1] - self.size[1] * self.cell) / 2)
+        self.grid = []
 
-        self.maze = []
+        self.map = []
 
     def generate_maze(self):
         self.generator = MazeGenerator(size=self.size, seed=self.seed)
@@ -28,10 +33,7 @@ class Map:
         south = [4, 5, 6, 7, 12, 13, 14, 15]
         west = [8, 9, 10, 11, 12, 13, 14, 15]
 
-        ref = self.win[0] if self.win[0] < self.win[1] else self.win[1]
-        self.cell = math.floor((ref - (2 * 5)) / self.size[0])
-        self.margin = (((self.win[0] - self.size[0] * self.cell) / 2),
-                       (self.win[1] - self.size[1] * self.cell) / 2)
+        
 
         for y in range(self.size[1]):
             for x in range(self.size[0]):
@@ -58,3 +60,15 @@ class Map:
                                      arcade.color.WHITE, 1)
                 if self.maze[y][x] == 15:
                     arcade.draw_lbwh_rectangle_filled(c0[0], c2[1], (c1[0] - c0[0]), (c0[1] - c2[1]), arcade.color.BLUE)
+
+                # i, j = self.grid[y][x]
+                # arcade.draw_circle_filled(i, j, 3, arcade.color.RED)
+
+    def calculate_grid(self):
+        x0 = self.margin[0] + self.cell // 2
+        y0 = self.win[1] - self.margin[0] - self.cell // 2
+
+        for y in range(self.size[1]):
+            self.grid.append([])
+            for x in range(self.size[0]):
+                self.grid[y].append((x0 + x * self.cell, y0 - y * self.cell))

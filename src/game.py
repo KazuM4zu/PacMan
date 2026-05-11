@@ -65,23 +65,24 @@ class GameView(arcade.View):
     def __init__(self):
         super().__init__()
 
-        self.map = Map()
-        self.map.size = (15, 15)
+        self.map = Map((15, 15), (500, 520))
         self.map.seed = 42
-        self.map.win = (500, 520)
         self.map.generate_maze()
         self.manager = gui.UIManager()
         self.escape_menu = None
         self.settings_menu = None
+        self.map.calculate_grid()
+        self.player = Player(self.map)
 
-        self.player = Player()
 
     def on_draw(self):
         self.clear()
         self.map.draw()
+        self.player.draw()
         self.manager.draw()
 
     def on_key_press(self, symbol, modifiers):
+        self.player.on_key_press(symbol, modifiers)
         if symbol == key.ESCAPE:
             if self.escape_menu:
                 self.manager.remove(self.escape_menu)
@@ -99,10 +100,4 @@ class GameView(arcade.View):
     def on_update(self, delta_time):
         if self.escape_menu:
             return
-
-
-if __name__ == "__main__":
-    window = arcade.Window(500, 520, "Pac-Man")
-    grr = GameView()
-    window.show_view(grr)
-    arcade.run()
+        self.player.update()
