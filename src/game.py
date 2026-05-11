@@ -25,6 +25,9 @@ class EscapeMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
                 ),
             )
         )
+        pause_label = gui.UILabel(text="Pause", align="center", font_size=20,
+                                  multiline=False)
+
         back_button = gui.UIFlatButton(text="Return to the game", width=250)
         back_button.on_click = self.on_click_back_button
 
@@ -32,6 +35,7 @@ class EscapeMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         exit_button.on_click = self.on_click_exit_button
 
         widget_layout = gui.UIBoxLayout(align="left", space_between=10)
+        widget_layout.add(pause_label)
         widget_layout.add(back_button)
         widget_layout.add(exit_button)
         frame.add(child=widget_layout, anchor_x="center_x", anchor_y="top")
@@ -39,7 +43,7 @@ class EscapeMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
     def on_click_back_button(self, event):
         self.parent.remove(self)
         self.game_view.escape_menu = None
-    
+
     def on_click_exit_button(self, event):
         from menu import MenuView
         menu_view = MenuView()
