@@ -60,7 +60,6 @@ class EscapeMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
             self.game_view.manager.add(self.game_view.settings_menu, layer=2)
             
 
-
 class GameView(arcade.View):
     def __init__(self):
         super().__init__()
@@ -74,12 +73,13 @@ class GameView(arcade.View):
         self.map.calculate_grid()
         self.player = Player(self.map)
 
-
     def on_draw(self):
         self.clear()
         self.map.draw()
         self.player.draw()
         self.manager.draw()
+        self.window.set_caption("Pacman - In Game")
+        arcade.set_background_color(arcade.color.BLACK)
 
     def on_key_press(self, symbol, modifiers):
         self.player.on_key_press(symbol, modifiers)
