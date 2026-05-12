@@ -52,13 +52,13 @@ class EscapeMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         from menu import MenuView
         menu_view = MenuView()
         self.game_view.window.show_view(menu_view)
-    
+
     def on_click_settings_button(self, event):
         if not self.game_view.settings_menu:
             from settings import SettingsSubMenu
             self.game_view.settings_menu = SettingsSubMenu(self.game_view)
             self.game_view.manager.add(self.game_view.settings_menu, layer=2)
-            
+
 
 class GameView(arcade.View):
     def __init__(self):

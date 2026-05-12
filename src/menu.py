@@ -1,6 +1,4 @@
 import arcade
-import arcade.gui as gui
-import os
 import arcade.color
 from game import GameView
 import pyglet
@@ -69,31 +67,32 @@ class MenuView(arcade.View):
         self.manager.disable()
 
     def on_draw(self):
-            self.clear()
-            
-            # Dessiner l'objet texte pré-calculé
-            self.title_text.draw()
-            for i, text_obj in enumerate(self.menu_texts):
-                text_obj.draw()
-                
-                if i == self.selected_index:
-                    y = text_obj.y
-                    text_width = text_obj.content_width
-                    triangle_x = self.menu_center_x - (text_width // 2) - 30
+        self.clear()
 
-                    arcade.draw_triangle_filled(
-                        triangle_x, y - 8,
-                        triangle_x, y + 8,
-                        triangle_x + 12, y,
-                        arcade.color.GREEN
-                    )
-            self.manager.draw()
+        self.title_text.draw()
+        for i, text_obj in enumerate(self.menu_texts):
+            text_obj.draw()
+
+            if i == self.selected_index:
+                y = text_obj.y
+                text_width = text_obj.content_width
+                triangle_x = self.menu_center_x - (text_width // 2) - 30
+
+                arcade.draw_triangle_filled(
+                    triangle_x, y - 8,
+                    triangle_x, y + 8,
+                    triangle_x + 12, y,
+                    arcade.color.GREEN
+                )
+        self.manager.draw()
 
     def on_key_press(self, symbol, modifiers):
         if symbol == arcade.key.UP:
-            self.selected_index = (self.selected_index - 1) % len(self.menu_options)
+            self.selected_index = ((self.selected_index - 1)
+                                   % len(self.menu_options))
         elif symbol == arcade.key.DOWN:
-            self.selected_index = (self.selected_index + 1) % len(self.menu_options)
+            self.selected_index = ((self.selected_index + 1)
+                                   % len(self.menu_options))
         elif symbol == arcade.key.ENTER:
             self.execute_action()
 
@@ -115,7 +114,8 @@ class MenuView(arcade.View):
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
-            item_y = self.menu_start_y - (self.selected_index * self.menu_spacing)
+            item_y = self.menu_start_y - (self.selected_index
+                                          * self.menu_spacing)
             hitbox_height = self.font_size + 15
             if item_y - hitbox_height // 2 < y < item_y + hitbox_height // 2:
                 self.execute_action()

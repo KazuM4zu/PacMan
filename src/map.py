@@ -33,8 +33,6 @@ class Map:
         south = [4, 5, 6, 7, 12, 13, 14, 15]
         west = [8, 9, 10, 11, 12, 13, 14, 15]
 
-        
-
         for y in range(self.size[1]):
             for x in range(self.size[0]):
                 c0 = ((self.margin[0] + self.cell * x),
@@ -59,7 +57,10 @@ class Map:
                     arcade.draw_line(c0[0], c0[1], c2[0], c2[1],
                                      arcade.color.WHITE, 1)
                 if self.maze[y][x] == 15:
-                    arcade.draw_lbwh_rectangle_filled(c0[0], c2[1], (c1[0] - c0[0]), (c0[1] - c2[1]), arcade.color.BLUE)
+                    arcade.draw_lbwh_rectangle_filled(c0[0], c2[1],
+                                                      (c1[0] - c0[0]),
+                                                      (c0[1] - c2[1]),
+                                                      arcade.color.BLUE)
 
                 # i, j = self.grid[y][x]
                 # arcade.draw_circle_filled(i, j, 3, arcade.color.RED)
