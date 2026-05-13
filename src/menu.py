@@ -58,7 +58,7 @@ class MenuView(arcade.View):
         self.manager.enable()
         self.window.set_caption("Pacman - Menu")
         try:
-            icon = pyglet.image.load("../assets/images/logo.png")
+            icon = pyglet.image.load("assets/images/logo.png")
             self.window.set_icon(icon)
         except FileNotFoundError:
             print("The icon image file could not be found.")
