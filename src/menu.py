@@ -3,6 +3,7 @@ import arcade.color
 from game import GameView
 import pyglet
 from settings import SettingsSubMenu
+from scoreboard import ScoreView, Scoreboard
 
 WINDOW_WIDTH = 520
 WINDOW_HEIGHT = 500
@@ -23,8 +24,8 @@ class MenuView(arcade.View):
         self.menu_spacing = 45
         self.font_size = 20
 
-        arcade.load_font("../assets/font/Pacmania.ttf")
-        arcade.load_font("../assets/font/PressStart2P-Regular.ttf")
+        arcade.load_font("assets/font/Pacmania.ttf")
+        arcade.load_font("assets/font/PressStart2P-Regular.ttf")
         self.title_text = arcade.Text(
             "DARK-MAN",
             self.menu_center_x,
@@ -131,3 +132,6 @@ class MenuView(arcade.View):
                 self.manager.add(self.settings_menu)
         elif selected == "Exit":
             arcade.exit()
+        elif selected == "Scoreboards":
+            score_view = ScoreView(Scoreboard())
+            self.window.show_view(score_view)
