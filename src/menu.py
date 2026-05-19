@@ -19,8 +19,6 @@ class MenuView(arcade.View):
         self.menu_options = ["Play", "Scoreboards", "Settings", "Exit"]
         self.selected_index = 0
 
-        self.menu_center_x = WINDOW_WIDTH // 2
-        self.menu_start_y = 300
         self.menu_spacing = 45
         self.font_size = 20
 
@@ -28,8 +26,7 @@ class MenuView(arcade.View):
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
         self.title_text = arcade.Text(
             "DARK-MAN",
-            self.menu_center_x,
-            WINDOW_HEIGHT - 100,
+            0, 0,
             arcade.color.RED,
             font_size=50,
             font_name="Pacmania",
@@ -38,14 +35,11 @@ class MenuView(arcade.View):
         )
 
         self.menu_texts = []
-        self.menu_texts = []
         for i, option in enumerate(self.menu_options):
-            y_pos = self.menu_start_y - (i * self.menu_spacing)
-
             text_obj = arcade.Text(
                 text=option,
-                x=self.menu_center_x,
-                y=y_pos,
+                x=0,
+                y=0,
                 color=arcade.color.WHITE,
                 font_name="Press Start 2P",
                 font_size=self.font_size,
@@ -67,17 +61,29 @@ class MenuView(arcade.View):
     def on_hide_view(self):
         self.manager.disable()
 
+    def update_position(self):
+        center_x = self.window.width // 2
+        start_y = int(self.window.height * 0.6)
+
+        self.title_text.x = center_x
+        self.title_text.y = self.window.height - 100
+
+        for i, text_obj in enumerate(self.menu_texts):
+            text_obj.x = center_x
+            text_obj.y = start_y - (i * self.menu_spacing)
+
     def on_draw(self):
         self.clear()
-
+        self.update_position()
         self.title_text.draw()
+        center_x = self.window.width // 2
         for i, text_obj in enumerate(self.menu_texts):
             text_obj.draw()
 
             if i == self.selected_index:
                 y = text_obj.y
                 text_width = text_obj.content_width
-                triangle_x = self.menu_center_x - (text_width // 2) - 30
+                triangle_x = center_x - (text_width // 2) - 30
 
                 arcade.draw_triangle_filled(
                     triangle_x, y - 8,
@@ -98,14 +104,16 @@ class MenuView(arcade.View):
             self.execute_action()
 
     def on_mouse_motion(self, x, y, dx, dy):
+        center_x = self.window.width // 2
+        start_y = int(self.window.height * 0.6)
         for i in range(len(self.menu_options)):
-            item_y = self.menu_start_y - (i * self.menu_spacing)
+            item_y = start_y - (i * self.menu_spacing)
 
             hitbox_width = 200
             hitbox_height = self.font_size + 15
 
-            left = self.menu_center_x - hitbox_width // 2
-            right = self.menu_center_x + hitbox_width // 2
+            left = center_x - hitbox_width // 2
+            right = center_x + hitbox_width // 2
             bottom = item_y - hitbox_height // 2
             top = item_y + hitbox_height // 2
 
@@ -115,8 +123,9 @@ class MenuView(arcade.View):
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
-            item_y = self.menu_start_y - (self.selected_index
-                                          * self.menu_spacing)
+            start_y = int(self.window.height * 0.6)
+            item_y = start_y - (self.selected_index
+                                * self.menu_spacing)
             hitbox_height = self.font_size + 15
             if item_y - hitbox_height // 2 < y < item_y + hitbox_height // 2:
                 self.execute_action()
