@@ -76,11 +76,6 @@ class ScoreView(arcade.View):
         )
         self.back_selected = False
 
-    def get_dim_menu(self):
-        from menu import WINDOW_HEIGHT, WINDOW_WIDTH
-        self.win_height = WINDOW_HEIGHT
-        self.win_width = WINDOW_WIDTH
-
     def update_position(self):
         center_x = self.window.width // 2
 
@@ -116,7 +111,6 @@ class ScoreView(arcade.View):
             )
             self.scores_txt.append(txt)
             return
-        # On affiche que les 5 premiers scores
         for i, (name, score) in enumerate(scores_tries[:6]):
             txt_line = f"{i + 1}. {name.upper()[:8].ljust(8)}... {score}"
 
@@ -125,7 +119,6 @@ class ScoreView(arcade.View):
                 x=0, y=0,
                 color=arcade.color.WHITE,
                 font_name="Press Start 2P",
-                font_size=14,
                 anchor_x="center",
                 anchor_y="center"
             )
