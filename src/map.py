@@ -17,6 +17,15 @@ class Map:
         self.grid = []
 
         self.map = []
+        # use_spatial_hash permet d'acceler la detection de colisions
+        self.wall_list = arcade.SpriteList(use_spatial_hash=True)
+        self.wall_textures = arcade.load_spritesheet(
+            file_name="assets/sprite/maze_parts.png",
+            sprite_width=16,
+            sprite_height=16,
+            columns=16,
+            count=16
+        )
 
     def generate_maze(self):
         self.generator = MazeGenerator(size=self.size, seed=self.seed)
