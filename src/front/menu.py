@@ -1,9 +1,10 @@
 import arcade
 import arcade.color
-from game import GameView
+from front.game import GameView
 import pyglet
-from settings import SettingsSubMenu
-from scoreboard import ScoreView, Scoreboard
+from front.settings import SettingsSubMenu
+from back.scoreboard import Scoreboard
+from front.scoreview import ScoreView
 
 WINDOW_WIDTH = 520
 WINDOW_HEIGHT = 500

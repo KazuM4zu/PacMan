@@ -10,7 +10,7 @@ class SettingView(arcade.View):
 
         @back_button.event("on_click")
         def on_click_back_button(event):
-            from menu import MenuView
+            from front.menu import MenuView
             menu_view = MenuView()
             self.window.show_view(menu_view)
 
@@ -60,13 +60,13 @@ class SettingView(arcade.View):
         self.manager.draw()
 
 
-
 class SettingsSubMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
     def __init__(self, menu_view):
         super().__init__(size_hint=(1, 1))
         self.menu_view = menu_view
 
-        self.frame = self.add(gui.UIAnchorLayout(width=350, height=450, size_hint=None))
+        self.frame = self.add(gui.UIAnchorLayout(width=350, height=450,
+                                                 size_hint=None))
 
         self.frame.with_background(
             texture=arcade.gui.NinePatchTexture(
@@ -102,9 +102,10 @@ class SettingsSubMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         def on_click_back_button(event):
             self.parent.remove(self)
             self.menu_view.settings_menu = None
-        
+
         @self.toggle.event("on_click")
         def on_toggle_fullscreen(event):
             self.menu_view.window.set_fullscreen(self.toggle.value)
 
-        self.frame.add(child=self.widget_layout, anchor_x="center_x", anchor_y="center_y")
+        self.frame.add(child=self.widget_layout, anchor_x="center_x",
+                       anchor_y="center_y")

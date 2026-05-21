@@ -1,9 +1,11 @@
 import arcade
 
+
 class Player:
     def __init__(self, map):
         self.map = map
-        self.cell_pos = [round(self.map.size[1] / 2) - 1, round(self.map.size[0] / 2) - 1]
+        self.cell_pos = ([round(self.map.size[1] / 2) - 1,
+                          round(self.map.size[0] / 2) - 1])
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
         self.score = 0
@@ -55,14 +57,14 @@ class Player:
             self.pos[1] = min(self.pos[1] + self.speed, target[1])
         elif self.pos[1] > target[1]:
             self.pos[1] = max(self.pos[1] - self.speed, target[1])
-    
+
     def have_wall(self, nx: int, ny: int):
         current = self.map.maze[self.cell_pos[1]][self.cell_pos[0]]
         north = [1, 3, 5, 7, 9, 11, 13, 15]
         east = [2, 3, 6, 7, 10, 11, 14, 15]
         south = [4, 5, 6, 7, 12, 13, 14, 15]
         west = [8, 9, 10, 11, 12, 13, 14, 15]
-        
+
         if nx == 1 and current in east:
             return True
         elif nx == -1 and current in west:
@@ -71,5 +73,5 @@ class Player:
             return True
         elif ny == 1 and current in north:
             return True
-        
+
         return False

@@ -1,5 +1,5 @@
-from menu import MenuView
-import menu
+from front.menu import MenuView
+import front.menu as menu
 import arcade
 
 if __name__ == "__main__":
