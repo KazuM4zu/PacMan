@@ -1,0 +1,12 @@
+{
+    "score_file": "scoreboard.json",
+    "lvl_size": [200, 200],
+    "lives": 3,
+    "nb_pacgum": 42,
+    "pt_per_pacgum": 10,
+    "pt_per_sppacgum": 100,
+    "pt_per_ghost": 200,
+    "seed": 42,
+    "lvl_max_time": 90,
+    "win_size": [600, 600]
+}
