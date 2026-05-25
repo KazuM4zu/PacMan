@@ -11,13 +11,11 @@ class Player:
         self.score = 0
         self.lives = 3
 
-        self.speed = 2
+        self.speed = 3
         self.dx = 0
         self.dy = 0
         self.next_dx = 0
         self.next_dy = 0
-
-        self.cell = 0
 
     def draw(self):
         arcade.draw_circle_filled(self.pos[0],

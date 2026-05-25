@@ -12,8 +12,9 @@ WINDOW_HEIGHT = 500
 
 class MenuView(arcade.View):
 
-    def __init__(self):
+    def __init__(self, config_data):
         super().__init__()
+        self.config_data = config_data
         self.manager = arcade.gui.UIManager()
         self.settings_menu = None
 
@@ -134,7 +135,7 @@ class MenuView(arcade.View):
     def execute_action(self):
         selected = self.menu_options[self.selected_index]
         if selected == "Play":
-            game_view = GameView()
+            game_view = GameView(self.config_data)
             self.window.show_view(game_view)
         elif selected == "Settings":
             if not self.settings_menu:

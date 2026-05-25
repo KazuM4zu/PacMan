@@ -13,7 +13,6 @@ class Config(BaseModel):
     pt_per_ghost: int
     seed: int
     lvl_max_time: int
-    win_size: Optional[Tuple[int, int]]
 
 
 def check_config_file(config_file):
