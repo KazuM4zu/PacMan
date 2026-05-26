@@ -15,9 +15,34 @@ class GameView(arcade.View):
         self.map.calculate_grid()
         self.map.generate_maze()
         self.manager = gui.UIManager()
+        self.manager.enable()
         self.escape_menu = None
         self.settings_menu = None
         self.player = Player(self.map)
+        arcade.load_font("assets/font/Pacmania.ttf")
+        arcade.load_font("assets/font/PressStart2P-Regular.ttf")
+
+        self.top_info = gui.UIBoxLayout(
+            vertical=False, space_between=100
+        )
+        self.life_label = gui.UILabel(
+            text=f"Life: {self.player.lives}",
+            font_name="Press Start 2P",
+            text_color=arcade.color.YELLOW
+        )
+        self.score_label = gui.UILabel(
+            text=f"Score: {self.player.score}",
+            font_name="Press Start 2P",
+            text_color=arcade.color.YELLOW
+        )
+        self.top_info.add(self.life_label)
+        self.top_info.add(self.score_label)
+
+        anchor_layout = gui.UIAnchorLayout()
+        anchor_layout.add(child=self.top_info, anchor_x="center_x", anchor_y="top")
+        self.manager.add(anchor_layout)
+
+        
 
     def on_draw(self):
         self.clear()
@@ -47,3 +72,5 @@ class GameView(arcade.View):
         if self.escape_menu:
             return
         self.player.update()
+        self.life_label.text = f"Life: {self.player.lives}"
+        self.score_label.text = f"Score: {self.player.score}"
