@@ -1,11 +1,73 @@
 {
-    "score_file": "scoreboard.json",
-    "lvl_size": [15, 15],
-    "lives": 3,
-    "nb_pacgum": 0,
-    "pt_per_pacgum": 10,
-    "pt_per_sppacgum": 100,
-    "pt_per_ghost": 200,
-    "seed": 20999999999,
-    "lvl_max_time": 90
+  "score_file": "highscores.json",
+  "level": [
+    {
+      "id": 1,
+      "width": 20,
+      "height": 20,
+      "nb_pacgum": 100
+    },
+    {
+      "id": 2,
+      "width": 23,
+      "height": 23,
+      "nb_pacgum": 120
+    },
+    {
+      "id": 3,
+      "width": 26,
+      "height": 26,
+      "nb_pacgum": 140
+    },
+    {
+      "id": 4,
+      "width": 29,
+      "height": 29,
+      "nb_pacgum": 160
+    },
+    {
+      "id": 5,
+      "width": 32,
+      "height": 32,
+      "nb_pacgum": 180
+    },
+    {
+      "id": 6,
+      "width": 35,
+      "height": 35,
+      "nb_pacgum": 200
+    },
+    {
+      "id": 7,
+      "width": 38,
+      "height": 38,
+      "nb_pacgum": 140
+    },
+    {
+      "id": 8,
+      "width": 41,
+      "height": 41,
+      "nb_pacgum": 220
+    },
+    {
+      "id": 9,
+      "width": 44,
+      "height": 44,
+      "nb_pacgum": 240
+    },
+    {
+      "id": 10,
+      "width": 46,
+      "height": 46,
+      "nb_pacgum": 260
+    }
+  ],
+  "lives": 3,
+  "nb_pacgum": 42,
+  "pt_per_pacgum": 10,
+  "pt_per_super_pacgum": 50,
+  "pt_per_ghost": 200,
+  "lvl_max_time": 90,
+  "seed": 904,
+  "lvl_size": [15,15]
 }

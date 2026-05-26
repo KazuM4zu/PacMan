@@ -1,18 +1,26 @@
 import json
-from typing import Tuple, Optional
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, Field
+from pydantic import NonNegativeInt, PositiveInt
+
+
+class LevelModel(BaseModel):
+    id: int
+    width: int = Field(ge=10, le=46)
+    height: int = Field(ge=10, le=46)
+    nb_pacgum: NonNegativeInt
 
 
 class Config(BaseModel):
     score_file: str
-    lvl_size: Tuple[int, int]
-    lives: int
-    nb_pacgum: int
-    pt_per_pacgum: int
-    pt_per_sppacgum: int
-    pt_per_ghost: int
+    level: list[LevelModel]
+    lives: NonNegativeInt
+    nb_pacgum: NonNegativeInt
+    pt_per_pacgum: NonNegativeInt
+    pt_per_super_pacgum: NonNegativeInt
+    pt_per_ghost: NonNegativeInt
+    lvl_max_time: PositiveInt
     seed: int
-    lvl_max_time: int
+    lvl_size: list[NonNegativeInt]
 
 
 def check_config_file(config_file):
