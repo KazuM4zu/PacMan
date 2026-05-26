@@ -9,7 +9,9 @@ class Player:
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
         self.score = 0
-        self.lives = 3
+        self.lives = self.map.config_data.lives
+        self.pacgum = 0
+        self.super_pacgum = 0
 
         self.speed = 3
         self.dx = 0
@@ -38,6 +40,7 @@ class Player:
             self.next_dy = -1
 
     def update(self):
+        cx, cy  = self.map.grid[self.cell_pos[1]][self.cell_pos[0]]
         if self.pos == list(self.map.grid[self.cell_pos[1]][self.cell_pos[0]]):
             if not self.have_wall(self.next_dx, self.next_dy):
                 self.dx = self.next_dx
@@ -55,6 +58,20 @@ class Player:
             self.pos[1] = min(self.pos[1] + self.speed, target[1])
         elif self.pos[1] > target[1]:
             self.pos[1] = max(self.pos[1] - self.speed, target[1])
+
+        if self.pos[1] == target[1] and self.pos[0] == target[0] and self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] == 1:
+            for pacgum in self.map.pacgums_list:
+                if pacgum.center_x == cx and pacgum.center_y == cy:
+                    pacgum.kill()
+                    self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] = 0
+                    break
+
+        if self.pos[1] == target[1] and self.pos[0] == target[0] and self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] == 2:
+            for super_pacgums in self.map.super_pacgums_list:
+                if super_pacgums.center_x == cx and super_pacgums.center_y == cy:
+                    super_pacgums.kill()
+                    self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] = 0
+                    break
 
     def have_wall(self, nx: int, ny: int):
         current = self.map.maze[self.cell_pos[1]][self.cell_pos[0]]

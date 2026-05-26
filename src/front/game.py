@@ -12,7 +12,6 @@ class GameView(arcade.View):
 
         self.config_data = config_data
         self.map = Map(config_data, (self.window.width, self.window.height))
-        self.map.seed = 42
         self.map.calculate_grid()
         self.map.generate_maze()
         self.manager = gui.UIManager()
