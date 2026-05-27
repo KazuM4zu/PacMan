@@ -17,7 +17,6 @@ class Map:
 
         self.game_zone = (self.win[0] // 2, self.win[1])
 
-
         cell_w = self.game_zone[0] // self.size[0]
         cell_h = self.game_zone[1] // self.size[1]
         self.cell = min(cell_w, cell_h)

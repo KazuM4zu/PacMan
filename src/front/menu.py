@@ -144,5 +144,5 @@ class MenuView(arcade.View):
         elif selected == "Exit":
             arcade.exit()
         elif selected == "Scoreboards":
-            score_view = ScoreView(Scoreboard())
+            score_view = ScoreView(Scoreboard(), self.config_data)
             self.window.show_view(score_view)

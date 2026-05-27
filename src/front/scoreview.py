@@ -4,10 +4,11 @@ import arcade.gui as gui
 
 
 class ScoreView(arcade.View):
-    def __init__(self, scoreboard: Scoreboard):
+    def __init__(self, scoreboard: Scoreboard, config_data):
         super().__init__()
         self.sc = scoreboard
         self.manager = gui.UIManager()
+        self.config = config_data
 
         arcade.load_font("assets/font/Pacmania.ttf")
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
@@ -139,7 +140,7 @@ class ScoreView(arcade.View):
 
     def execute_back(self):
         from front.menu import MenuView
-        menu_view = MenuView()
+        menu_view = MenuView(self.config)
         self.window.show_view(menu_view)
 
 
