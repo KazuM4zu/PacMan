@@ -20,12 +20,12 @@ class GameView(arcade.View):
         self.manager.enable()
         self.escape_menu = None
         self.settings_menu = None
-        
+
         arcade.load_font("assets/font/Pacmania.ttf")
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
 
     def generate_level(self):
-        self.map = Map(self.config_data, self.index_level, 
+        self.map = Map(self.config_data, self.index_level,
                        (self.window.width, self.window.height))
         self.map.generate_maze()
         if self.index_level == 0:
@@ -33,7 +33,7 @@ class GameView(arcade.View):
         else:
             self.player.map = self.map
             self.player.cell_pos = ([round(self.player.map.size[1] / 2) - 1,
-                            round(self.player.map.size[0] / 2) - 1])
+                                    round(self.player.map.size[0] / 2) - 1])
             x, y = self.player.cell_pos
             self.player.pos = list(self.player.map.grid[y][x])
             self.player.speed = self.player.map.cell // 16
@@ -69,5 +69,5 @@ class GameView(arcade.View):
         self.player.update()
         if (len(self.map.pacgums_list) == 0 and
             len(self.map.super_pacgums_list) == 0 and
-            self.index_level < len(self.config_data.level)):
+                self.index_level < len(self.config_data.level)):
             self.generate_level()

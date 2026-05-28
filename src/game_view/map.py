@@ -33,7 +33,7 @@ class Map:
 
         self.grid = []
         self.map = []
-        self.collectibles = []
+        self.collects = []
 
         self.sprites = {}
         self.scale = self.cell / 16
@@ -82,14 +82,14 @@ class Map:
                                        center_x=cx,
                                        center_y=cy)
 
-                if self.collectibles[y][x] == 1:
+                if self.collects[y][x] == 1:
                     pacgums = arcade.Sprite(self.sprites["pacgum"],
                                             scale=self.scale,
                                             center_x=cx,
                                             center_y=cy)
                     self.pacgums_list.append(pacgums)
 
-                elif self.collectibles[y][x] == 2:
+                elif self.collects[y][x] == 2:
                     super_pacgums = arcade.Sprite(self.sprites["super_pacgum"],
                                                   scale=self.scale,
                                                   center_x=cx,
@@ -127,12 +127,12 @@ class Map:
                     line.append(int(2))
                 else:
                     line.append(int(0))
-            self.collectibles.append(line)
+            self.collects.append(line)
 
         cell_void = []
         for y in range(self.size[1]):
             for x in range(self.size[0]):
-                if self.collectibles[y][x] == 0:
+                if self.collects[y][x] == 0:
                     cell_void.append((y, x))
 
         if self.current.nb_pacgum > len(cell_void):
@@ -141,14 +141,14 @@ class Map:
         pacgums = random.sample(cell_void, self.current.nb_pacgum)
 
         for x, y in pacgums:
-            self.collectibles[x][y] = 1
+            self.collects[x][y] = 1
 
-        # for line in self.collectibles:
+        # for line in self.collects:
         #     print(line)
         # print()
 
         # count = 0
-        # for line in self.collectibles:
+        # for line in self.collects:
         #     for cell in line:
         #         if cell == 1:
         #             count += 1

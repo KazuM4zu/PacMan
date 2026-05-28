@@ -18,7 +18,8 @@ class EscapeMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
                 bottom=7,
                 top=7,
                 texture=arcade.load_texture(
-                    ":resources:gui_basic_assets/window/dark_blue_gray_panel.png"
+                    ":resources:gui_basic_assets/window" +
+                    "/dark_blue_gray_panel.png"
                 ),
             )
         )

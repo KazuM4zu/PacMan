@@ -40,7 +40,7 @@ class Player:
             self.next_dy = -1
 
     def update(self):
-        cx, cy  = self.map.grid[self.cell_pos[1]][self.cell_pos[0]]
+        cx, cy = self.map.grid[self.cell_pos[1]][self.cell_pos[0]]
         if self.pos == list(self.map.grid[self.cell_pos[1]][self.cell_pos[0]]):
             if not self.have_wall(self.next_dx, self.next_dy):
                 self.dx = self.next_dx
@@ -59,19 +59,22 @@ class Player:
         elif self.pos[1] > target[1]:
             self.pos[1] = max(self.pos[1] - self.speed, target[1])
 
-        if self.pos[1] == target[1] and self.pos[0] == target[0] and self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] == 1:
+        if (self.pos[1] == target[1] and self.pos[0] == target[0] and
+           self.map.collects[self.cell_pos[1]][self.cell_pos[0]] == 1):
             for pacgum in self.map.pacgums_list:
                 if pacgum.center_x == cx and pacgum.center_y == cy:
                     pacgum.kill()
-                    self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] = 0
+                    self.map.collects[self.cell_pos[1]][self.cell_pos[0]] = 0
                     self.score += self.config_data.pt_per_pacgum
                     break
 
-        if self.pos[1] == target[1] and self.pos[0] == target[0] and self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] == 2:
+        if (self.pos[1] == target[1] and self.pos[0] == target[0] and
+           self.map.collects[self.cell_pos[1]][self.cell_pos[0]] == 2):
             for super_pacgums in self.map.super_pacgums_list:
-                if super_pacgums.center_x == cx and super_pacgums.center_y == cy:
+                if (super_pacgums.center_x == cx and
+                   super_pacgums.center_y == cy):
                     super_pacgums.kill()
-                    self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] = 0
+                    self.map.collects[self.cell_pos[1]][self.cell_pos[0]] = 0
                     self.score += self.config_data.pt_per_super_pacgum
                     break
 
