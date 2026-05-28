@@ -1,19 +1,20 @@
+from config import Config
 from mazegenerator.mazegenerator import MazeGenerator
-from back.config import Config
-from typing import List
-from PIL import Image
-import math
+
 import arcade
 import random
+from PIL import Image
+from typing import List
 
 
 class Map:
-    def __init__(self, config_data: Config, win: List[int]):
+    def __init__(self, config_data: Config, level_index: int, win: List[int]):
         self.config_data = config_data
-        self.first_game = True
+        self.level_index = level_index
+        self.current = self.config_data.level[self.level_index]
         self.seed = self.config_data.seed
         self.win = win
-        self.size = self.config_data.lvl_size
+        self.size = [self.current.width, self.current.height]
 
         self.game_zone = (self.win[0] // 2, self.win[1])
 
@@ -33,25 +34,26 @@ class Map:
         self.grid = []
         self.map = []
         self.collectibles = []
+
+        self.sprites = {}
+        self.scale = self.cell / 16
         self.tile_list = arcade.SpriteList()
         self.pacgums_list = arcade.SpriteList()
         self.super_pacgums_list = arcade.SpriteList()
-        self.sprites = {}
-
 
     def generate_maze(self):
-        self.generator = MazeGenerator(size=self.size, seed=self.seed)
-        if self.first_game is True:
+        self.generator = MazeGenerator(size=self.size,
+                                       seed=self.seed)
+        if self.level_index == 0:
             self.generator.generate(self.generator._seed)
-            self.first_game = False
         else:
             self.generator.generate(0)
         self.maze = self.generator._maze
+        self.calculate_grid()
         self.init_pacgum()
         self.build_sprites()
 
     def build_sprites(self):
-        scale = self.cell / 16
         wall_sheet = Image.open("assets/sprite/pixil-frame-0.png")
         wall_textures = []
         pacgum_image = Image.open("assets/sprite/pacgum.png")
@@ -60,29 +62,41 @@ class Map:
             region = wall_sheet.crop((i * 16, 0, i * 16 + 16, 16))
             wall_texture = arcade.Texture(image=region, name=f"tile_{i}")
             wall_textures.append(wall_texture)
-        pacgums_texture = arcade.Texture(image=pacgum_image, name=f"pacgum")
-        super_pacgum_texture = arcade.Texture(image=super_pacgum_image, name=f"super_pacgum")
+        pacgums_texture = arcade.Texture(image=pacgum_image,
+                                         name="pacgum")
+        super_pacgum_texture = arcade.Texture(image=super_pacgum_image,
+                                              name="super_pacgum")
+        self.sprites["wall"] = wall_textures
         self.sprites["pacgum"] = pacgums_texture
         self.sprites["super_pacgum"] = super_pacgum_texture
+        self.build_pacgums_sprites()
 
-
+    def build_pacgums_sprites(self):
         for y in range(self.size[1]):
             for x in range(self.size[0]):
                 cx, cy = self.grid[y][x]
                 cell_index = self.maze[y][x]
 
-                sprite = arcade.Sprite(wall_textures[cell_index], scale=scale, center_x=cx, center_y=cy)
+                sprite = arcade.Sprite(self.sprites["wall"][cell_index],
+                                       scale=self.scale,
+                                       center_x=cx,
+                                       center_y=cy)
 
                 if self.collectibles[y][x] == 1:
-                    pacgums = arcade.Sprite(pacgums_texture, scale=scale, center_x=cx, center_y=cy)
+                    pacgums = arcade.Sprite(self.sprites["pacgum"],
+                                            scale=self.scale,
+                                            center_x=cx,
+                                            center_y=cy)
                     self.pacgums_list.append(pacgums)
 
-                if self.collectibles[y][x] == 2:
-                    super_pacgums = arcade.Sprite(super_pacgum_texture, scale=scale, center_x=cx, center_y=cy)
+                elif self.collectibles[y][x] == 2:
+                    super_pacgums = arcade.Sprite(self.sprites["super_pacgum"],
+                                                  scale=self.scale,
+                                                  center_x=cx,
+                                                  center_y=cy)
                     self.super_pacgums_list.append(super_pacgums)
-                
-                self.tile_list.append(sprite)
 
+                self.tile_list.append(sprite)
 
     def draw(self):
         self.tile_list.draw()
@@ -102,12 +116,14 @@ class Map:
         for y in range(self.size[1]):
             line = []
             for x in range(self.size[0]):
-                if self.maze[y][x] == 15 or (x == round(self.size[0] / 2) - 1 and y == round(self.size[1] / 2) - 1):
+                if (self.maze[y][x] == 15 or
+                    (x == round(self.size[0] / 2) - 1 and
+                     y == round(self.size[1] / 2) - 1)):
                     line.append(int(9))
-                elif ((y == 0 and x == 0) or 
-                    (y == self.size[1] - 1 and x == 0) or 
-                    (x == self.size[0] - 1 and y == 0) or 
-                    (y == self.size[1] - 1 and x == self.size[0] - 1)):
+                elif ((y == 0 and x == 0) or
+                      (y == self.size[1] - 1 and x == 0) or
+                      (x == self.size[0] - 1 and y == 0) or
+                      (y == self.size[1] - 1 and x == self.size[0] - 1)):
                     line.append(int(2))
                 else:
                     line.append(int(0))
@@ -119,14 +135,14 @@ class Map:
                 if self.collectibles[y][x] == 0:
                     cell_void.append((y, x))
 
-        if self.config_data.nb_pacgum > len(cell_void):
+        if self.current.nb_pacgum > len(cell_void):
             raise ValueError("y a un pb")
-        
-        pacgums = random.sample(cell_void, self.config_data.nb_pacgum)
+
+        pacgums = random.sample(cell_void, self.current.nb_pacgum)
 
         for x, y in pacgums:
             self.collectibles[x][y] = 1
-        
+
         # for line in self.collectibles:
         #     print(line)
         # print()

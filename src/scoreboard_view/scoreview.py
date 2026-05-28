@@ -1,4 +1,5 @@
-from back.scoreboard import Scoreboard
+from scoreboard_view.scoreboard import Scoreboard
+
 import arcade
 import arcade.gui as gui
 
@@ -139,7 +140,7 @@ class ScoreView(arcade.View):
             self.execute_back()
 
     def execute_back(self):
-        from front.menu import MenuView
+        from menu_view.menu_view import MenuView
         menu_view = MenuView(self.config)
         self.window.show_view(menu_view)
 

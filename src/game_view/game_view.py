@@ -1,6 +1,7 @@
-from back.map import Map
-from back.player import Player
-from front.escape_menu import EscapeMenu
+from game_view.map import Map
+from game_view.player import Player
+from game_view.game_menu.escape_menu import EscapeMenu
+
 import arcade.key as key
 import arcade.gui as gui
 import arcade
@@ -11,38 +12,32 @@ class GameView(arcade.View):
         super().__init__()
 
         self.config_data = config_data
-        self.map = Map(config_data, (self.window.width, self.window.height))
-        self.map.calculate_grid()
-        self.map.generate_maze()
+        self.index_level = 0
+        self.first_game = True
+        self.generate_level()
+
         self.manager = gui.UIManager()
         self.manager.enable()
         self.escape_menu = None
         self.settings_menu = None
-        self.player = Player(self.map)
+        
         arcade.load_font("assets/font/Pacmania.ttf")
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
 
-        self.top_info = gui.UIBoxLayout(
-            vertical=False, space_between=100
-        )
-        self.life_label = gui.UILabel(
-            text=f"Life: {self.player.lives}",
-            font_name="Press Start 2P",
-            text_color=arcade.color.YELLOW
-        )
-        self.score_label = gui.UILabel(
-            text=f"Score: {self.player.score}",
-            font_name="Press Start 2P",
-            text_color=arcade.color.YELLOW
-        )
-        self.top_info.add(self.life_label)
-        self.top_info.add(self.score_label)
-
-        anchor_layout = gui.UIAnchorLayout()
-        anchor_layout.add(child=self.top_info, anchor_x="center_x", anchor_y="top")
-        self.manager.add(anchor_layout)
-
-        
+    def generate_level(self):
+        self.map = Map(self.config_data, self.index_level, 
+                       (self.window.width, self.window.height))
+        self.map.generate_maze()
+        if self.index_level == 0:
+            self.player = Player(self.map, self.config_data)
+        else:
+            self.player.map = self.map
+            self.player.cell_pos = ([round(self.player.map.size[1] / 2) - 1,
+                            round(self.player.map.size[0] / 2) - 1])
+            x, y = self.player.cell_pos
+            self.player.pos = list(self.player.map.grid[y][x])
+            self.player.speed = self.player.map.cell // 16
+        self.index_level += 1
 
     def on_draw(self):
         self.clear()
@@ -72,5 +67,7 @@ class GameView(arcade.View):
         if self.escape_menu:
             return
         self.player.update()
-        self.life_label.text = f"Life: {self.player.lives}"
-        self.score_label.text = f"Score: {self.player.score}"
+        if (len(self.map.pacgums_list) == 0 and
+            len(self.map.super_pacgums_list) == 0 and
+            self.index_level < len(self.config_data.level)):
+            self.generate_level()

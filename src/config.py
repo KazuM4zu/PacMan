@@ -4,7 +4,6 @@ from pydantic import NonNegativeInt, PositiveInt
 
 
 class LevelModel(BaseModel):
-    id: int
     width: int = Field(ge=10, le=46)
     height: int = Field(ge=10, le=46)
     nb_pacgum: NonNegativeInt
@@ -19,8 +18,7 @@ class Config(BaseModel):
     pt_per_super_pacgum: NonNegativeInt
     pt_per_ghost: NonNegativeInt
     lvl_max_time: PositiveInt
-    seed: int
-    lvl_size: list[NonNegativeInt]
+    seed: PositiveInt
 
 
 def check_config_file(config_file):
@@ -28,7 +26,7 @@ def check_config_file(config_file):
         with open(config_file, "r", encoding="utf-8") as f:
             data_config = json.load(f)
         valid_function = Config(**data_config)
-        print("The config file is valid and loaded")
+        # print("The config file is valid and loaded")
         return valid_function
     except FileNotFoundError:
         raise FileNotFoundError(f"'{config_file}' file was not found")

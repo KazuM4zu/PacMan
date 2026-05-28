@@ -1,13 +1,14 @@
 import arcade
 import arcade.color
-from front.game import GameView
+import arcade.key
+import arcade.gui
 import pyglet
-from front.settings import SettingsSubMenu
-from back.scoreboard import Scoreboard
-from front.scoreview import ScoreView
 
-WINDOW_WIDTH = 520
-WINDOW_HEIGHT = 500
+
+from game_view.game_view import GameView
+from setting_view.settings import SettingsSubMenu
+from scoreboard_view.scoreboard import Scoreboard
+from scoreboard_view.scoreview import ScoreView
 
 
 class MenuView(arcade.View):
@@ -15,17 +16,19 @@ class MenuView(arcade.View):
     def __init__(self, config_data):
         super().__init__()
         self.config_data = config_data
+
         self.manager = arcade.gui.UIManager()
-        self.settings_menu = None
 
-        self.menu_options = ["Play", "Scoreboards", "Settings", "Exit"]
         self.selected_index = 0
-
+        self.menu_options = ["Play", "Scoreboards", "Settings", "Exit"]
         self.menu_spacing = 45
-        self.font_size = 20
+
+        self.settings_menu = None
 
         arcade.load_font("assets/font/Pacmania.ttf")
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
+
+        self.font_size = 20
         self.title_text = arcade.Text(
             "DARK-MAN",
             0, 0,
@@ -102,8 +105,27 @@ class MenuView(arcade.View):
         elif symbol == arcade.key.DOWN:
             self.selected_index = ((self.selected_index + 1)
                                    % len(self.menu_options))
-        elif symbol == arcade.key.ENTER:
+        elif symbol == arcade.key.SPACE:
             self.execute_action()
+
+    def execute_action(self):
+        selected = self.menu_options[self.selected_index]
+
+        if selected == "Play":
+            game_view = GameView(self.config_data)
+            self.window.show_view(game_view)
+
+        elif selected == "Settings":
+            if not self.settings_menu:
+                self.settings_menu = SettingsSubMenu(self)
+                self.manager.add(self.settings_menu)
+
+        elif selected == "Exit":
+            arcade.exit()
+
+        elif selected == "Scoreboards":
+            score_view = ScoreView(Scoreboard(), self.config_data)
+            self.window.show_view(score_view)
 
     def on_mouse_motion(self, x, y, dx, dy):
         center_x = self.window.width // 2
@@ -131,18 +153,3 @@ class MenuView(arcade.View):
             hitbox_height = self.font_size + 15
             if item_y - hitbox_height // 2 < y < item_y + hitbox_height // 2:
                 self.execute_action()
-
-    def execute_action(self):
-        selected = self.menu_options[self.selected_index]
-        if selected == "Play":
-            game_view = GameView(self.config_data)
-            self.window.show_view(game_view)
-        elif selected == "Settings":
-            if not self.settings_menu:
-                self.settings_menu = SettingsSubMenu(self)
-                self.manager.add(self.settings_menu)
-        elif selected == "Exit":
-            arcade.exit()
-        elif selected == "Scoreboards":
-            score_view = ScoreView(Scoreboard(), self.config_data)
-            self.window.show_view(score_view)

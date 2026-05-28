@@ -2,18 +2,18 @@ import arcade
 
 
 class Player:
-    def __init__(self, map):
+    def __init__(self, map, config_data):
+        self.config_data = config_data
         self.map = map
         self.cell_pos = ([round(self.map.size[1] / 2) - 1,
                           round(self.map.size[0] / 2) - 1])
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
+        self.speed = self.map.cell // 16
+
         self.score = 0
         self.lives = self.map.config_data.lives
-        self.pacgum = 0
-        self.super_pacgum = 0
 
-        self.speed = 3
         self.dx = 0
         self.dy = 0
         self.next_dx = 0
@@ -64,6 +64,7 @@ class Player:
                 if pacgum.center_x == cx and pacgum.center_y == cy:
                     pacgum.kill()
                     self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] = 0
+                    self.score += self.config_data.pt_per_pacgum
                     break
 
         if self.pos[1] == target[1] and self.pos[0] == target[0] and self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] == 2:
@@ -71,7 +72,10 @@ class Player:
                 if super_pacgums.center_x == cx and super_pacgums.center_y == cy:
                     super_pacgums.kill()
                     self.map.collectibles[self.cell_pos[1]][self.cell_pos[0]] = 0
+                    self.score += self.config_data.pt_per_super_pacgum
                     break
+
+        print(self.score)
 
     def have_wall(self, nx: int, ny: int):
         current = self.map.maze[self.cell_pos[1]][self.cell_pos[0]]
