@@ -73,13 +73,20 @@ class ScoreView(arcade.View):
             )
             self.scores_txt.append(txt)
             return
-        for i, (name, score) in enumerate(scores_tries[:6]):
-            txt_line = f"{i + 1}. {name.upper()[:8].ljust(8)}... {score}"
+        for i, (name, score) in enumerate(scores_tries[:15]):
+            txt_line = f"{i + 1}. {name.upper()[:14].ljust(14)}... {score}"
+            color = arcade.color.WHITE
+            if i == 0:
+                color = arcade.color.GOLD
+            elif i == 1:
+                color = arcade.color.SILVER
+            elif i == 2:
+                color = arcade.color.BRONZE
 
             txt = arcade.Text(
                 text=txt_line,
                 x=0, y=0,
-                color=arcade.color.WHITE,
+                color=color,
                 font_name="Press Start 2P",
                 anchor_x="center",
                 anchor_y="center"
