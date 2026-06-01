@@ -17,7 +17,7 @@ class ScoreView(arcade.View):
         self.title_text = arcade.Text(
             "SCOREBOARD",
             0, 0,
-            arcade.color.YELLOW,
+            arcade.color.WHITE,
             font_size=40,
             font_name="Press Start 2P",
             anchor_x="center",
@@ -94,7 +94,7 @@ class ScoreView(arcade.View):
             self.scores_txt.append(txt)
 
     def on_show_view(self):
-        arcade.set_background_color(arcade.color.DARK_MIDNIGHT_BLUE)
+        arcade.set_background_color(arcade.color.EERIE_BLACK)
         self.manager.enable()
         self.window.set_caption("DarkMan - Scoreboard")
         self.scores_txt = []
@@ -121,7 +121,7 @@ class ScoreView(arcade.View):
                 triangle_x, y - 8,
                 triangle_x, y + 8,
                 triangle_x + 12, y,
-                arcade.color.GREEN
+                arcade.color.RED_DEVIL
             )
 
     def on_key_press(self, symbol, modifiers):

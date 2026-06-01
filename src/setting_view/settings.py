@@ -1,114 +1,140 @@
 import arcade
-import arcade.gui as gui
+import arcade.color
+import arcade.key
+from typing import Any, List
 
 
 class SettingView(arcade.View):
-    def __init__(self):
+    def __init__(self, main_menu_view, config_data) -> None:
         super().__init__()
-        self.manager = gui.UIManager()
-        back_button = gui.UIFlatButton(text="Back", width=50)
+        self.config_data = config_data
+        self.main_menu_view = main_menu_view
 
-        @back_button.event("on_click")
-        def on_click_back_button(event):
-            from front.menu import MenuView
-            menu_view = MenuView()
-            self.window.show_view(menu_view)
+        self.selected_index = 0
+        self.volume = 50
+        self.menu_options = ["Volume", "Back"]
+        self.menu_spacing = 45
 
-        on_text = arcade.load_texture(
-            ":resources:gui_basic_assets/simple_checkbox/circle_on.png"
-        )
-        off_text = arcade.load_texture(
-            ":resources:gui_basic_assets/simple_checkbox/circle_off.png"
-        )
+        arcade.load_font("assets/font/Pacmania.ttf")
+        arcade.load_font("assets/font/PressStart2P-Regular.ttf")
 
-        toggle_label = gui.UILabel(text="Full Screen")
-        toggle = gui.UITextureToggle(
-            on_texture=on_text, off_texture=off_text, width=20, height=20
-        )
+        self.font_size = 20
 
-        toggle_group = gui.UIBoxLayout(vertical=False, space_between=5)
-        toggle_group.add(toggle)
-        toggle_group.add(toggle_label)
-
-        self.top_grid = gui.UIGridLayout(
-            column_count=3, row_count=1, horizontal_spacing=100
-        )
-        self.top_grid.add(back_button, column=0, row=0)
-
-        self.top_anchor = self.manager.add(gui.UIAnchorLayout())
-        self.top_anchor.add(
-            anchor_x="left",
-            anchor_y="top",
-            child=self.top_grid,
-        )
-        self.mid_anchor = self.manager.add(gui.UIAnchorLayout())
-        self.mid_anchor.add(
-            anchor_x="left",
-            anchor_y="center_y",
-            child=toggle_group
-        )
-
-    def on_show_view(self):
-        self.window.set_caption("Pacman - Settings")
-        self.manager.enable()
-
-    def on_hide_view(self):
-        self.manager.disable()
-
-    def on_draw(self):
-        self.clear()
-        self.manager.draw()
-
-
-class SettingsSubMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
-    def __init__(self, menu_view):
-        super().__init__(size_hint=(1, 1))
-        self.menu_view = menu_view
-
-        self.frame = self.add(gui.UIAnchorLayout(width=350, height=450,
-                                                 size_hint=None))
-
-        self.frame.with_background(
-            texture=arcade.gui.NinePatchTexture(
-                left=7, right=7, bottom=7, top=7,
-                texture=arcade.load_texture(
-                    ":resources:gui_basic_assets/" +
-                    "window/dark_blue_gray_panel.png"
-                ),
+        self.menu_texts: List[arcade.Text] = []
+        for option in self.menu_options:
+            text_obj = arcade.Text(
+                text=option,
+                x=0,
+                y=0,
+                color=arcade.color.LIGHT_GRAY,
+                font_name="Press Start 2P",
+                font_size=self.font_size,
+                anchor_x="center",
+                anchor_y="center"
             )
-        )
+            self.menu_texts.append(text_obj)
 
-        self.widget_layout = gui.UIBoxLayout(space_between=30)
+    def on_show_view(self) -> None:
+        arcade.set_background_color(arcade.color.EERIE_BLACK)
+        self.window.set_caption("Pacman - Settings")
 
-        title_label = gui.UILabel(text="SETTINGS", font_size=20)
-        self.widget_layout.add(title_label)
+    def update_position(self) -> None:
 
-        on_text = arcade.load_texture(":resources:gui_basic_assets/" +
-                                      "simple_checkbox/circle_on.png")
-        off_text = arcade.load_texture(":resources:gui_basic_assets/" +
-                                       "simple_checkbox/circle_off.png")
+        center_x = self.window.width // 2
+        start_y = int(self.window.height * 0.6)
 
-        toggle_label = gui.UILabel(text="Full Screen")
-        self.toggle = gui.UITextureToggle(
-            on_texture=on_text, off_texture=off_text, width=20, height=20
-        )
+        self.menu_texts[0].text = f"Volume : < {self.volume}% >"
 
-        toggle_group = gui.UIBoxLayout(vertical=False, space_between=10)
-        toggle_group.add(self.toggle)
-        toggle_group.add(toggle_label)
-        self.widget_layout.add(toggle_group)
+        for i, text_obj in enumerate(self.menu_texts):
+            text_obj.x = center_x
+            text_obj.y = start_y - (i * self.menu_spacing)
 
-        back_button = gui.UIFlatButton(text="Back", width=200)
-        self.widget_layout.add(back_button)
+    def on_draw(self) -> None:
+        self.clear()
+        self.update_position()
 
-        @back_button.event("on_click")
-        def on_click_back_button(event):
-            self.parent.remove(self)
-            self.menu_view.settings_menu = None
+        center_x = self.window.width // 2
+        for i, text_obj in enumerate(self.menu_texts):
+            if i == self.selected_index:
+                text_obj.color = arcade.color.WHITE
+            else:
+                text_obj.color = arcade.color.ASH_GREY
 
-        @self.toggle.event("on_click")
-        def on_toggle_fullscreen(event):
-            self.menu_view.window.set_fullscreen(self.toggle.value)
+            text_obj.draw()
 
-        self.frame.add(child=self.widget_layout, anchor_x="center_x",
-                       anchor_y="center_y")
+            if i == self.selected_index:
+                y = text_obj.y
+                text_width = text_obj.content_width
+                triangle_x = center_x - (text_width // 2) - 30
+
+                arcade.draw_triangle_filled(
+                    triangle_x, y - 8,
+                    triangle_x, y + 8,
+                    triangle_x + 12, y,
+                    arcade.color.RED_DEVIL
+                )
+
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
+        if symbol == arcade.key.UP:
+            self.selected_index = ((self.selected_index - 1) % len(self.menu_options))
+        elif symbol == arcade.key.DOWN:
+            self.selected_index = ((self.selected_index + 1) % len(self.menu_options))
+        elif symbol == arcade.key.LEFT:
+            if self.selected_index == 0:
+                self.volume = max(0, self.volume - 5)
+                self.apply_volume()
+        elif symbol == arcade.key.RIGHT:
+            if self.selected_index == 0:
+                self.volume = min(100, self.volume + 5)
+                self.apply_volume()
+        elif symbol in (arcade.key.ENTER, arcade.key.SPACE):
+            self.execute_action()
+
+    def apply_volume(self) -> None:
+        if hasattr(self.main_menu_view, "music_player") and self.main_menu_view.music_player:
+            self.main_menu_view.music_player.volume = self.volume / 100
+
+    def execute_action(self) -> None:
+        if self.selected_index == 1:
+            self.window.show_view(self.main_menu_view)
+
+    def on_mouse_motion(self, x: float, y: float, dx: float, dy: float) -> None:
+        if not self.window:
+            return
+
+        center_x = self.window.width // 2
+        start_y = int(self.window.height * 0.6)
+        for i in range(len(self.menu_options)):
+            item_y = start_y - (i * self.menu_spacing)
+
+            hitbox_width = 350
+            hitbox_height = self.font_size + 15
+
+            left = center_x - hitbox_width // 2
+            right = center_x + hitbox_width // 2
+            bottom = item_y - hitbox_height // 2
+            top = item_y + hitbox_height // 2
+
+            if left < x < right and bottom < y < top:
+                self.selected_index = i
+                break
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int) -> None:
+        if not self.window:
+            return
+            
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            start_y = int(self.window.height * 0.6)
+            item_y = start_y - (self.selected_index * self.menu_spacing)
+            hitbox_height = self.font_size + 15
+
+            if item_y - hitbox_height // 2 < y < item_y + hitbox_height // 2:
+                if self.selected_index == 0:
+                    center_x = self.window.width // 2
+                    if x < center_x:
+                        self.volume = max(0, self.volume - 5)
+                    else:
+                        self.volume = min(100, self.volume + 5)
+                    self.apply_volume()
+                else:
+                    self.execute_action()

@@ -13,9 +13,10 @@ import arcade
 
 
 class GameView(arcade.View):
-    def __init__(self, config_data):
+    def __init__(self, main_menu_view, config_data):
         super().__init__()
 
+        self.main_menu_view = main_menu_view
         self.config_data = config_data
         self.sc = Scoreboard()
         self.index_level = 0
