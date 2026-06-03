@@ -12,6 +12,8 @@ from scoreboard_view.scoreview import ScoreView
 
 
 class MenuView(arcade.View):
+    _fire_anim = None
+    _elmo_anim = None
 
     def __init__(self, config_data):
         super().__init__()
@@ -60,10 +62,16 @@ class MenuView(arcade.View):
             loop=True
         )
 
-        fire_anim = pyglet.image.load_animation("assets/images/fire.gif")
-        self.fire_top = pyglet.sprite.Sprite(fire_anim)
-        elmo_fire = pyglet.image.load_animation("assets/images/elmo.gif")
-        self.elmo = pyglet.sprite.Sprite(elmo_fire)
+        if MenuView._fire_anim is None:
+            MenuView._fire_anim = pyglet.image.load_animation(
+                "assets/images/fire.gif")
+
+        if MenuView._elmo_anim is None:
+            MenuView._elmo_anim = pyglet.image.load_animation(
+                "assets/images/elmo.gif")
+
+        self.fire_top = pyglet.sprite.Sprite(MenuView._fire_anim)
+        self.elmo = pyglet.sprite.Sprite(MenuView._elmo_anim)
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.EERIE_BLACK)

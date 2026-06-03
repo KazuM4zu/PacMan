@@ -49,35 +49,25 @@ class GameView(arcade.View):
     def setup_ui(self) -> None:
         panel_width: int = (self.window.width // 4) - 10
 
-        # ECHAP PANEL
+        # LEFT
         self.panel_echap = MenuEchapPanel(
             width=panel_width,
             height=500,
             player=self.player,
             view=self
         )
-        self.echap_anchor = gui.UIAnchorLayout()
-        self.echap_anchor.add(
-            anchor_x="left",
-            anchor_y="top",
-            child=self.panel_echap.get_widget()
-        )
-
-        # LEFT
-        self.left_layout = gui.UIBoxLayout(vertical=True, space_between=20)
         self.panel_cheat = CheatPanel(
             width=panel_width, height=500, player=self.player
         )
-
-        self.left_layout.add(self.panel_cheat.get_widget())
-
-        anchor_left = gui.UIAnchorLayout()
-        anchor_left.add(
+        self.left_box = gui.UIBoxLayout(vertical=True, space_between=20)
+        self.left_box.add(self.panel_echap.get_widget())
+        self.left_box.add(self.panel_cheat.get_widget())
+        self.left_anchor = gui.UIAnchorLayout()
+        self.left_anchor.add(
             anchor_x="left",
-            anchor_y="bottom",
-            child=self.left_layout
+            anchor_y="center_y",
+            child=self.left_box
         )
-        self.manager.add(anchor_left)
 
         # RIGHT
         self.right_layout = gui.UIBoxLayout(vertical=True, space_between=20)
@@ -129,9 +119,9 @@ class GameView(arcade.View):
     def pause_game(self):
         self.is_paused = not self.is_paused
         if self.is_paused:
-            self.manager.add(self.echap_anchor, layer=1)
+            self.manager.add(self.left_anchor, layer=1)
         else:
-            self.manager.remove(self.echap_anchor)
+            self.manager.remove(self.left_anchor)
 
     def on_key_press(self, symbol, modifiers):
         self.player.on_key_press(symbol, modifiers)
@@ -152,6 +142,7 @@ class GameView(arcade.View):
 
     def on_update(self, delta_time):
         if self.is_paused:
+            self.panel_echap.update_labels()
             return
         self.player.update()
         self.stat_panel.update_label()

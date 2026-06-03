@@ -92,3 +92,8 @@ class MenuEchapPanel(PanelInterface):
             from menu_view.menu_view import MenuView
             menu = MenuView(self.view.config_data)
             self.view.window.show_view(menu)
+        elif selected == "Settings":
+            from setting_view.settings import SettingView
+            setting = SettingView(self.view, self.view.config_data)
+            self.view.window.show_view(setting)
+
