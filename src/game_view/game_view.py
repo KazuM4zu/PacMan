@@ -1,7 +1,6 @@
 from game_view.map import Map
 from game_view.player import Player
 from scoreboard_view.scoreboard import Scoreboard
-from game_view.game_menu.escape_menu import EscapeMenu
 from game_view.game_menu.left.echap_panel import MenuEchapPanel
 from game_view.game_menu.left.cheat_panel import CheatPanel
 from game_view.game_menu.right.leader_panel import LeadPanel
@@ -26,6 +25,7 @@ class GameView(arcade.View):
         self.manager.enable()
         self.escape_menu = None
         self.settings_menu = None
+        self.is_paused = False
 
         try:
             self.music = arcade.load_sound("assets/sound/music/game_music.mp3",
@@ -46,36 +46,47 @@ class GameView(arcade.View):
         arcade.load_font("assets/font/Pacmania.ttf")
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
 
-    def setup_ui(self):
-        panel_width = (self.window.width // 4) - 10
+    def setup_ui(self) -> None:
+        panel_width: int = (self.window.width // 4) - 10
+
+        # ECHAP PANEL
+        self.panel_echap = MenuEchapPanel(
+            width=panel_width,
+            height=500,
+            player=self.player,
+            view=self
+        )
+        self.echap_anchor = gui.UIAnchorLayout()
+        self.echap_anchor.add(
+            anchor_x="left",
+            anchor_y="top",
+            child=self.panel_echap.get_widget()
+        )
 
         # LEFT
         self.left_layout = gui.UIBoxLayout(vertical=True, space_between=20)
+        self.panel_cheat = CheatPanel(
+            width=panel_width, height=500, player=self.player
+        )
 
-        self.panel_echap = MenuEchapPanel(width=panel_width, height=500,
-                                          player=self.player)
-        self.panel_cheat = CheatPanel(width=panel_width, height=500,
-                                      player=self.player)
-
-        self.left_layout.add(self.panel_echap.get_widget())
         self.left_layout.add(self.panel_cheat.get_widget())
 
         anchor_left = gui.UIAnchorLayout()
-
         anchor_left.add(
             anchor_x="left",
-            anchor_y="center_y",
+            anchor_y="bottom",
             child=self.left_layout
         )
         self.manager.add(anchor_left)
 
         # RIGHT
         self.right_layout = gui.UIBoxLayout(vertical=True, space_between=20)
-
-        self.stat_panel = StatPanel(width=panel_width, height=200,
-                                    player=self.player)
-        self.lead_panel = LeadPanel(width=panel_width, height=800,
-                                    player=self.player)
+        self.stat_panel = StatPanel(
+            width=panel_width, height=200, player=self.player
+        )
+        self.lead_panel = LeadPanel(
+            width=panel_width, height=800, player=self.player
+        )
 
         self.right_layout.add(self.stat_panel.get_widget())
         self.right_layout.add(self.lead_panel.get_widget())
@@ -83,7 +94,6 @@ class GameView(arcade.View):
         self.lead_panel.update_lead(self.sc.get_scores())
 
         anchor_right = gui.UIAnchorLayout()
-
         anchor_right.add(
             anchor_x="right",
             anchor_y="center_y",
@@ -111,18 +121,28 @@ class GameView(arcade.View):
         self.map.draw()
         self.player.draw()
         self.manager.draw()
+        if self.is_paused:
+            self.panel_echap.draw_triangle()
         self.window.set_caption("Pacman - In Game")
         arcade.set_background_color(arcade.color.BLACK)
+
+    def pause_game(self):
+        self.is_paused = not self.is_paused
+        if self.is_paused:
+            self.manager.add(self.echap_anchor, layer=1)
+        else:
+            self.manager.remove(self.echap_anchor)
 
     def on_key_press(self, symbol, modifiers):
         self.player.on_key_press(symbol, modifiers)
         if symbol == key.ESCAPE:
-            if self.escape_menu:
-                self.manager.remove(self.escape_menu)
-                self.escape_menu = None
-            else:
-                self.escape_menu = EscapeMenu(self)
-                self.manager.add(self.escape_menu, layer=1)
+            self.pause_game()
+            return
+
+        if self.is_paused:
+            self.panel_echap.on_key_press(symbol, modifiers)
+        else:
+            self.player.on_key_press(symbol, modifiers)
 
     def on_show_view(self):
         self.manager.enable()
@@ -131,7 +151,7 @@ class GameView(arcade.View):
         self.manager.disable()
 
     def on_update(self, delta_time):
-        if self.escape_menu:
+        if self.is_paused:
             return
         self.player.update()
         self.stat_panel.update_label()

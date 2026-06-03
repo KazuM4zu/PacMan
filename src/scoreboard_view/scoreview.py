@@ -128,7 +128,8 @@ class ScoreView(arcade.View):
     def on_key_press(self, symbol, modifiers):
         if symbol in (arcade.key.UP, arcade.key.DOWN):
             self.back_selected = True
-        elif symbol == arcade.key.ENTER and self.back_selected:
+        elif (symbol == (arcade.key.SPACE)
+              and self.back_selected):
             self.execute_back()
 
     def on_mouse_motion(self, x, y, dx, dy):

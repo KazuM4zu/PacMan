@@ -16,11 +16,11 @@ class PanelInterface:
         arcade.load_font("assets/font/Pacmania.ttf")
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
         self.setup_ui()
-    
+
     def setup_ui(self):
         pass
 
     def get_widget(self):
         return self.layout.with_border(
-            color=arcade.color.YELLOW,
+            color=arcade.color.RED_DEVIL,
             width=4)
