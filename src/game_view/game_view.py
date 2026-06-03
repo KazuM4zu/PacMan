@@ -27,6 +27,19 @@ class GameView(arcade.View):
         self.escape_menu = None
         self.settings_menu = None
 
+        try:
+            self.music = arcade.load_sound("assets/sound/music/game_music.mp3",
+                                           streaming=True)
+            self.music_player = arcade.play_sound(
+                self.music,
+                volume=self.config_data.volume / 100,
+                loop=True
+            )
+        except FileNotFoundError:
+            print("Warning: game_music.mp3 not found or could not be loaded")
+            self.music = None
+            self.music_player = None
+
         self.generate_level()
         self.setup_ui()
 

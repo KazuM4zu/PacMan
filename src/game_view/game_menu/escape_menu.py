@@ -48,10 +48,11 @@ class EscapeMenu(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
 
     def on_click_exit_button(self, event):
         from menu_view.menu_view import MenuView
+        self.game_view.music.stop(player=self.game_view.music_player)
         menu_view = MenuView(self.game_view.config_data)
         self.game_view.window.show_view(menu_view)
 
     def on_click_settings_button(self, event):
         from setting_view.settings import SettingView
-        setting_view = SettingView(self.game_view.main_menu_view, self.game_view.config_data)
+        setting_view = SettingView(self.game_view, self.game_view.config_data)
         self.game_view.window.show_view(setting_view)

@@ -1,17 +1,17 @@
 import arcade
 import arcade.color
 import arcade.key
-from typing import Any, List
+from typing import List
 
 
 class SettingView(arcade.View):
-    def __init__(self, main_menu_view, config_data) -> None:
+    def __init__(self, last_view, config_data) -> None:
         super().__init__()
         self.config_data = config_data
-        self.main_menu_view = main_menu_view
+        self.last_view = last_view
 
         self.selected_index = 0
-        self.volume = 50
+        self.volume = self.config_data.volume
         self.menu_options = ["Volume", "Back"]
         self.menu_spacing = 45
 
@@ -76,9 +76,11 @@ class SettingView(arcade.View):
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         if symbol == arcade.key.UP:
-            self.selected_index = ((self.selected_index - 1) % len(self.menu_options))
+            self.selected_index = ((self.selected_index - 1) %
+                                   len(self.menu_options))
         elif symbol == arcade.key.DOWN:
-            self.selected_index = ((self.selected_index + 1) % len(self.menu_options))
+            self.selected_index = ((self.selected_index + 1) %
+                                   len(self.menu_options))
         elif symbol == arcade.key.LEFT:
             if self.selected_index == 0:
                 self.volume = max(0, self.volume - 5)
@@ -90,24 +92,31 @@ class SettingView(arcade.View):
         elif symbol in (arcade.key.ENTER, arcade.key.SPACE):
             self.execute_action()
 
+    def on_update(self, delta_time):
+        if self.config_data.volume != self.volume:
+            self.config_data.volume = self.volume
+            try:
+                self.config_data.save("config.json")
+            except Exception as e:
+                print("Could not save config:", e)
+
     def apply_volume(self) -> None:
-        if hasattr(self.main_menu_view, "music_player") and self.main_menu_view.music_player:
-            self.main_menu_view.music_player.volume = self.volume / 100
+        self.last_view.music_player.volume = self.volume / 100
 
     def execute_action(self) -> None:
         if self.selected_index == 1:
-            self.window.show_view(self.main_menu_view)
+            self.window.show_view(self.last_view)
 
-    def on_mouse_motion(self, x: float, y: float, dx: float, dy: float) -> None:
-        if not self.window:
-            return
-
+    def on_mouse_motion(self, x: float, y: float,
+                        dx: float, dy: float) -> None:
         center_x = self.window.width // 2
         start_y = int(self.window.height * 0.6)
+
         for i in range(len(self.menu_options)):
             item_y = start_y - (i * self.menu_spacing)
 
-            hitbox_width = 350
+            text_width = self.menu_texts[i].content_width
+            hitbox_width = text_width + 80
             hitbox_height = self.font_size + 15
 
             left = center_x - hitbox_width // 2
@@ -119,22 +128,33 @@ class SettingView(arcade.View):
                 self.selected_index = i
                 break
 
-    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int) -> None:
-        if not self.window:
-            return
-            
+    def on_mouse_press(self, x: float, y: float,
+                       button: int, modifiers: int) -> None:
         if button == arcade.MOUSE_BUTTON_LEFT:
+            center_x = self.window.width // 2
             start_y = int(self.window.height * 0.6)
-            item_y = start_y - (self.selected_index * self.menu_spacing)
-            hitbox_height = self.font_size + 15
 
-            if item_y - hitbox_height // 2 < y < item_y + hitbox_height // 2:
-                if self.selected_index == 0:
-                    center_x = self.window.width // 2
-                    if x < center_x:
-                        self.volume = max(0, self.volume - 5)
+            for i in range(len(self.menu_options)):
+                item_y = start_y - (i * self.menu_spacing)
+
+                text_width = self.menu_texts[i].content_width
+                hitbox_width = text_width + 80
+                hitbox_height = self.font_size + 15
+
+                left = center_x - hitbox_width // 2
+                right = center_x + hitbox_width // 2
+                bottom = item_y - hitbox_height // 2
+                top = item_y + hitbox_height // 2
+
+                if left < x < right and bottom < y < top:
+                    self.selected_index = i
+
+                    if self.selected_index == 0:
+                        if x < center_x + 80:
+                            self.volume = max(0, self.volume - 5)
+                        else:
+                            self.volume = min(100, self.volume + 5)
+                        self.apply_volume()
                     else:
-                        self.volume = min(100, self.volume + 5)
-                    self.apply_volume()
-                else:
-                    self.execute_action()
+                        self.execute_action()
+                    break

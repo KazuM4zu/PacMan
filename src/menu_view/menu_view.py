@@ -35,6 +35,10 @@ class MenuView(arcade.View):
         )
         self.sprites.append(self.title_logo)
 
+        self.background_texture = arcade.load_texture("assets"
+                                                      + "/images/"
+                                                      + "background.png")
+
         self.menu_texts = []
         for i, option in enumerate(self.menu_options):
             text_obj = arcade.Text(
@@ -48,12 +52,18 @@ class MenuView(arcade.View):
                 anchor_y="center"
             )
             self.menu_texts.append(text_obj)
-        self.music = arcade.load_sound("assets/sound/music/menu_music.mp3", streaming=True)
+        self.music = arcade.load_sound("assets/sound/music/menu_music.mp3",
+                                       streaming=True)
         self.music_player = arcade.play_sound(
             self.music,
-            volume=0.1,
+            volume=self.config_data.volume / 100,
             loop=True
         )
+
+        fire_anim = pyglet.image.load_animation("assets/images/fire.gif")
+        self.fire_top = pyglet.sprite.Sprite(fire_anim)
+        elmo_fire = pyglet.image.load_animation("assets/images/elmo.gif")
+        self.elmo = pyglet.sprite.Sprite(elmo_fire)
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.EERIE_BLACK)
@@ -64,7 +74,7 @@ class MenuView(arcade.View):
             self.window.set_icon(icon)
         except FileNotFoundError:
             print("The icon image file could not be found.")
-        
+
         if self.window:
             self.title_logo.center_x = self.window.width // 2
             self.title_logo.center_y = self.window.height - 250
@@ -83,9 +93,21 @@ class MenuView(arcade.View):
             text_obj.x = center_x
             text_obj.y = start_y - (i * self.menu_spacing)
 
+        self.fire_top.x = 0
+        self.fire_top.y = 0
+        elmo_x = center_x - (self.elmo.width // 2)
+        self.elmo.x = elmo_x
+        self.elmo.y = self.title_logo.top - 20
+
     def on_draw(self):
         self.clear()
         self.update_position()
+        arcade.draw_texture_rect(
+            self.background_texture,
+            arcade.LRBT(100, self.window.width, 0, self.window.height)
+        )
+        self.fire_top.draw()
+        self.elmo.draw()
         self.sprites.draw()
         center_x = self.window.width // 2
         for i, text_obj in enumerate(self.menu_texts):
@@ -93,7 +115,7 @@ class MenuView(arcade.View):
                 text_obj.color = arcade.color.WHITE
             else:
                 text_obj.color = arcade.color.ASH_GREY
-            
+
             text_obj.draw()
 
             if i == self.selected_index:
@@ -123,6 +145,7 @@ class MenuView(arcade.View):
         selected = self.menu_options[self.selected_index]
 
         if selected == "Play":
+            self.music.stop(player=self.music_player)
             game_view = GameView(self, self.config_data)
             self.window.show_view(game_view)
 
@@ -134,7 +157,7 @@ class MenuView(arcade.View):
             arcade.exit()
 
         elif selected == "Scoreboards":
-            score_view = ScoreView(Scoreboard(), self.config_data)
+            score_view = ScoreView(Scoreboard(), self, self.config_data)
             self.window.show_view(score_view)
 
     def on_mouse_motion(self, x, y, dx, dy):

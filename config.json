@@ -1,62 +1,63 @@
 {
-  "score_file": "highscores.json",
-  "level": [
-    {
-      "width": 20,
-      "height": 20,
-      "nb_pacgum": 100
-    },
-    {
-      "width": 23,
-      "height": 23,
-      "nb_pacgum": 120
-    },
-    {
-      "width": 26,
-      "height": 26,
-      "nb_pacgum": 140
-    },
-    {
-      "width": 29,
-      "height": 29,
-      "nb_pacgum": 160
-    },
-    {
-      "width": 32,
-      "height": 32,
-      "nb_pacgum": 180
-    },
-    {
-      "width": 35,
-      "height": 35,
-      "nb_pacgum": 200
-    },
-    {
-      "width": 38,
-      "height": 38,
-      "nb_pacgum": 140
-    },
-    {
-      "width": 41,
-      "height": 41,
-      "nb_pacgum": 220
-    },
-    {
-      "width": 44,
-      "height": 44,
-      "nb_pacgum": 240
-    },
-    {
-      "width": 46,
-      "height": 46,
-      "nb_pacgum": 260
-    }
-  ],
-  "lives": 3,
-  "nb_pacgum": 42,
-  "pt_per_pacgum": 10,
-  "pt_per_super_pacgum": 50,
-  "pt_per_ghost": 200,
-  "lvl_max_time": 90,
-  "seed": 904
+    "score_file": "highscores.json",
+    "level": [
+        {
+            "width": 20,
+            "height": 20,
+            "nb_pacgum": 100
+        },
+        {
+            "width": 23,
+            "height": 23,
+            "nb_pacgum": 120
+        },
+        {
+            "width": 26,
+            "height": 26,
+            "nb_pacgum": 140
+        },
+        {
+            "width": 29,
+            "height": 29,
+            "nb_pacgum": 160
+        },
+        {
+            "width": 32,
+            "height": 32,
+            "nb_pacgum": 180
+        },
+        {
+            "width": 35,
+            "height": 35,
+            "nb_pacgum": 200
+        },
+        {
+            "width": 38,
+            "height": 38,
+            "nb_pacgum": 140
+        },
+        {
+            "width": 41,
+            "height": 41,
+            "nb_pacgum": 220
+        },
+        {
+            "width": 44,
+            "height": 44,
+            "nb_pacgum": 240
+        },
+        {
+            "width": 46,
+            "height": 46,
+            "nb_pacgum": 260
+        }
+    ],
+    "lives": 3,
+    "nb_pacgum": 42,
+    "pt_per_pacgum": 10,
+    "pt_per_super_pacgum": 50,
+    "pt_per_ghost": 200,
+    "lvl_max_time": 90,
+    "seed": 904,
+    "volume": 35
 }

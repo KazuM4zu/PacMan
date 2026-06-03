@@ -5,8 +5,9 @@ import arcade.gui as gui
 
 
 class ScoreView(arcade.View):
-    def __init__(self, scoreboard: Scoreboard, config_data):
+    def __init__(self, scoreboard: Scoreboard, last_view, config_data):
         super().__init__()
+        self.last_view = last_view
         self.sc = scoreboard
         self.manager = gui.UIManager()
         self.config = config_data
@@ -147,9 +148,7 @@ class ScoreView(arcade.View):
             self.execute_back()
 
     def execute_back(self):
-        from menu_view.menu_view import MenuView
-        menu_view = MenuView(self.config)
-        self.window.show_view(menu_view)
+        self.window.show_view(self.last_view)
 
 
 if __name__ == "__main__":

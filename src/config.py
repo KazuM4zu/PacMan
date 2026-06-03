@@ -19,6 +19,11 @@ class Config(BaseModel):
     pt_per_ghost: NonNegativeInt
     lvl_max_time: PositiveInt
     seed: PositiveInt
+    volume: int = Field(ge=0, le=100)
+
+    def save(self, path: str = "config.json") -> None:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(self.model_dump(), f, ensure_ascii=False, indent=4)
 
 
 def check_config_file(config_file):
