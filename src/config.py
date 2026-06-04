@@ -20,6 +20,7 @@ class Config(BaseModel):
     lvl_max_time: PositiveInt
     seed: PositiveInt
     volume: int = Field(ge=0, le=100)
+    cheats_enabled: bool
 
     def save(self, path: str = "config.json") -> None:
         with open(path, "w", encoding="utf-8") as f:

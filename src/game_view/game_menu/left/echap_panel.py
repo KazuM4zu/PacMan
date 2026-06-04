@@ -5,7 +5,7 @@ from ..panel import PanelInterface
 
 class MenuEchapPanel(PanelInterface):
     def __init__(self, width, height, player, view):
-        self.menu_options = ["Resume", "Settings", "Back to Menu", "Quit"]
+        self.menu_options = ["Resume", "Settings", "Back to Menu", "Quit Game"]
         self.selected_index = 0
         self.labels = {}
         self.view = view
@@ -83,7 +83,7 @@ class MenuEchapPanel(PanelInterface):
 
     def execute_action(self):
         selected = self.menu_options[self.selected_index]
-        if selected == "Quit":
+        if selected == "Quit Game":
             arcade.exit()
         elif selected == "Resume":
             self.view.pause_game()
@@ -96,4 +96,3 @@ class MenuEchapPanel(PanelInterface):
             from setting_view.settings import SettingView
             setting = SettingView(self.view, self.view.config_data)
             self.view.window.show_view(setting)
-

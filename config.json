@@ -59,5 +59,6 @@
     "pt_per_ghost": 200,
     "lvl_max_time": 90,
     "seed": 904,
-    "volume": 80
+    "volume": 100,
+    "cheats_enabled": false
 }

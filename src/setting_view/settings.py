@@ -12,8 +12,10 @@ class SettingView(arcade.View):
 
         self.selected_index = 0
         self.volume = self.config_data.volume
-        self.menu_options = ["Volume", "Back"]
+        self.menu_options = ["Volume", "Cheats", "Back"]
         self.menu_spacing = 45
+
+        self.b_cheat = self.config_data.cheats_enabled
 
         arcade.load_font("assets/font/Pacmania.ttf")
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
@@ -44,6 +46,9 @@ class SettingView(arcade.View):
         start_y = int(self.window.height * 0.6)
 
         self.menu_texts[0].text = f"Volume : < {self.volume}% >"
+
+        cheat_state = "ON" if self.b_cheat else "OFF"
+        self.menu_texts[1].text = f"Cheats : < {cheat_state} >"
 
         for i, text_obj in enumerate(self.menu_texts):
             text_obj.x = center_x
@@ -85,16 +90,22 @@ class SettingView(arcade.View):
             if self.selected_index == 0:
                 self.volume = max(0, self.volume - 5)
                 self.apply_volume()
+            elif self.selected_index == 1:
+                self.execute_action()
         elif symbol == arcade.key.RIGHT:
             if self.selected_index == 0:
                 self.volume = min(100, self.volume + 5)
                 self.apply_volume()
+            elif self.selected_index == 1:
+                self.execute_action()
         elif symbol in (arcade.key.ENTER, arcade.key.SPACE):
             self.execute_action()
 
     def on_update(self, delta_time):
-        if self.config_data.volume != self.volume:
+        if (self.config_data.volume != self.volume or
+           self.b_cheat != self.config_data.cheats_enabled):
             self.config_data.volume = self.volume
+            self.config_data.cheats_enabled = self.b_cheat
             try:
                 self.config_data.save("config.json")
             except Exception as e:
@@ -105,6 +116,8 @@ class SettingView(arcade.View):
 
     def execute_action(self) -> None:
         if self.selected_index == 1:
+            self.b_cheat = not self.b_cheat
+        elif self.selected_index == 2:
             self.window.show_view(self.last_view)
 
     def on_mouse_motion(self, x: float, y: float,
@@ -155,6 +168,8 @@ class SettingView(arcade.View):
                         else:
                             self.volume = min(100, self.volume + 5)
                         self.apply_volume()
-                    else:
+                    elif self.selected_index == 1:
+                        self.b_cheat = not self.b_cheat
+                    elif self.selected_index == 2:
                         self.execute_action()
                     break

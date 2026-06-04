@@ -57,11 +57,10 @@ class GameView(arcade.View):
             view=self
         )
         self.panel_cheat = CheatPanel(
-            width=panel_width, height=500, player=self.player
-        )
+                width=panel_width, height=500, player=self.player
+            )
         self.left_box = gui.UIBoxLayout(vertical=True, space_between=20)
-        self.left_box.add(self.panel_echap.get_widget())
-        self.left_box.add(self.panel_cheat.get_widget())
+
         self.left_anchor = gui.UIAnchorLayout()
         self.left_anchor.add(
             anchor_x="left",
@@ -119,6 +118,10 @@ class GameView(arcade.View):
     def pause_game(self):
         self.is_paused = not self.is_paused
         if self.is_paused:
+            self.left_box.clear()
+            self.left_box.add(self.panel_echap.get_widget())
+            if self.config_data.cheats_enabled:
+                self.left_box.add(self.panel_cheat.get_widget())
             self.manager.add(self.left_anchor, layer=1)
         else:
             self.manager.remove(self.left_anchor)
