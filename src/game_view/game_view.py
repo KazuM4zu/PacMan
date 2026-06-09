@@ -150,6 +150,5 @@ class GameView(arcade.View):
         self.player.update()
         self.stat_panel.update_label()
         if (len(self.map.pacgums_list) == 0 and
-            len(self.map.super_pacgums_list) == 0 and
-                self.index_level < len(self.config_data.level)):
+            self.index_level < len(self.config_data.level)):
             self.generate_level()

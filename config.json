@@ -2,14 +2,14 @@
     "score_file": "highscores.json",
     "level": [
         {
-            "width": 20,
-            "height": 20,
-            "nb_pacgum": 100
+            "width": 10,
+            "height": 10,
+            "nb_pacgum": 30
         },
         {
-            "width": 23,
-            "height": 23,
-            "nb_pacgum": 120
+            "width": 15,
+            "height": 15,
+            "nb_pacgum": 50
         },
         {
             "width": 26,
