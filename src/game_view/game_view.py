@@ -57,7 +57,8 @@ class GameView(arcade.View):
             view=self
         )
         self.panel_cheat = CheatPanel(
-                width=panel_width, height=500, player=self.player
+                width=panel_width, height=500, player=self.player,
+                view=self
             )
         self.left_box = gui.UIBoxLayout(vertical=True, space_between=20)
 
@@ -127,7 +128,10 @@ class GameView(arcade.View):
             self.manager.remove(self.left_anchor)
 
     def on_key_press(self, symbol, modifiers):
+        if self.config_data.cheats_enabled and self.is_paused:
+            self.panel_cheat.on_key_press(symbol, modifiers)
         self.player.on_key_press(symbol, modifiers)
+
         if symbol == key.ESCAPE:
             self.pause_game()
             return
@@ -150,5 +154,5 @@ class GameView(arcade.View):
         self.player.update()
         self.stat_panel.update_label()
         if (len(self.map.pacgums_list) == 0 and
-            self.index_level < len(self.config_data.level)):
+           self.index_level < len(self.config_data.level)):
             self.generate_level()

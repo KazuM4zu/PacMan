@@ -78,7 +78,7 @@ class Player:
                     self.score += self.config_data.pt_per_super_pacgum
                     break
 
-        print(self.score)
+        # print(self.score)
 
     def have_wall(self, nx: int, ny: int):
         current = self.map.maze[self.cell_pos[1]][self.cell_pos[0]]

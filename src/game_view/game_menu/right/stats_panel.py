@@ -40,7 +40,7 @@ class StatPanel(PanelInterface):
             anchor_x="center_x",
             anchor_y="center_y"
         )
-    
+
     def update_label(self):
         self.score_label.text = f"Score: {self.player.score:04d}"
         self.live_label.text = f"Lifes: {self.player.lives}"
