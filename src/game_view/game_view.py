@@ -49,6 +49,22 @@ class GameView(arcade.View):
 
     def setup_ui(self) -> None:
         panel_width: int = (self.window.width // 4) - 10
+        self.top_anchor = gui.UIAnchorLayout()
+        txt = ""
+        if self.config_data.cheats_enabled:
+            txt = "Cheats enabled !"
+        self.cheat_lbl = gui.UILabel(
+            text=txt,
+            text_color=arcade.color.RED_DEVIL,
+            font_name="Press Start 2P",
+            font_size=10
+        )
+        self.top_anchor.add(
+            anchor_x="center_x",
+            anchor_y="top",
+            child=self.cheat_lbl.with_padding(top=15)
+        )
+        self.manager.add(self.top_anchor)
 
         # LEFT
         self.panel_echap = MenuEchapPanel(
@@ -129,7 +145,7 @@ class GameView(arcade.View):
             self.manager.remove(self.left_anchor)
 
     def on_key_press(self, symbol, modifiers):
-        if self.config_data.cheats_enabled and self.is_paused:
+        if self.config_data.cheats_enabled:
             self.panel_cheat.on_key_press(symbol, modifiers)
         self.player.on_key_press(symbol, modifiers)
 
@@ -172,3 +188,7 @@ class GameView(arcade.View):
                           self.sc,
                           defeat=True)
             self.window.show_view(win)
+        if self.config_data.cheats_enabled:
+            self.cheat_lbl.text = "Cheats enabled !"
+        else:
+            self.cheat_lbl.text = ""
