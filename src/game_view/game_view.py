@@ -5,6 +5,7 @@ from game_view.game_menu.left.echap_panel import MenuEchapPanel
 from game_view.game_menu.left.cheat_panel import CheatPanel
 from game_view.game_menu.right.leader_panel import LeadPanel
 from game_view.game_menu.right.stats_panel import StatPanel
+from game_view.ghost.blinky import Blinky
 from .end_view import EndView
 
 import arcade.key as key
@@ -121,12 +122,14 @@ class GameView(arcade.View):
             x, y = self.player.cell_pos
             self.player.pos = list(self.player.map.grid[y][x])
             self.player.speed = self.player.map.cell // 16
+        self.blinky = Blinky(self.map, self.player)
         self.index_level += 1
 
     def on_draw(self):
         self.clear()
         self.map.draw()
         self.player.draw()
+        self.blinky.draw()
         self.manager.draw()
         if self.is_paused:
             self.panel_echap.draw_triangle()
@@ -177,6 +180,7 @@ class GameView(arcade.View):
             self.panel_echap.update_labels()
             return
         self.player.update()
+        self.blinky.update()
         self.stat_panel.update_label()
         if (len(self.map.pacgums_list) == 0 and
            self.index_level < len(self.config_data.level)):
