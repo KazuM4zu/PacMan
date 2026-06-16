@@ -5,6 +5,7 @@ from game_view.game_menu.left.echap_panel import MenuEchapPanel
 from game_view.game_menu.left.cheat_panel import CheatPanel
 from game_view.game_menu.right.leader_panel import LeadPanel
 from game_view.game_menu.right.stats_panel import StatPanel
+from .end_view import EndView
 
 import arcade.key as key
 import arcade.gui as gui
@@ -135,6 +136,14 @@ class GameView(arcade.View):
         if symbol == key.ESCAPE:
             self.pause_game()
             return
+        elif symbol == key.F1:
+            self.win = EndView(self.main_menu_view, self.config_data,
+                               self.player, self.sc, defeat=False)
+            self.window.show_view(self.win)
+        elif symbol == key.F2:
+            self.win = EndView(self.main_menu_view, self.config_data,
+                               self.player, self.sc, defeat=True)
+            self.window.show_view(self.win)
 
         if self.is_paused:
             self.panel_echap.on_key_press(symbol, modifiers)
