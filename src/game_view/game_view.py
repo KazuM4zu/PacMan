@@ -165,3 +165,10 @@ class GameView(arcade.View):
         if (len(self.map.pacgums_list) == 0 and
            self.index_level < len(self.config_data.level)):
             self.generate_level()
+        if self.player.lives == 0:
+            win = EndView(self.main_menu_view,
+                          self.config_data,
+                          self.player,
+                          self.sc,
+                          defeat=True)
+            self.window.show_view(win)

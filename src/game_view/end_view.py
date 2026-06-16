@@ -108,18 +108,18 @@ class EndView(arcade.View):
             box_layout.add(self.error_msg)
 
             self.save_button = gui.UIFlatButton(
-                text="Login",
+                text="Save and exit",
                 height=40,
-                width=150,
+                width=300,
                 style=button_style
             )
             box_layout.add(self.save_button)
             self.save_button.on_click = self.on_save
 
         self.exit_button = gui.UIFlatButton(
-            text="Exit to menu",
+            text="Do not save and exit",
             height=60,
-            width=280,
+            width=450,
             style=button_style
         )
         box_layout.add(self.exit_button)

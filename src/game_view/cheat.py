@@ -12,6 +12,11 @@ class Cheat(ABC):
         p.lives += 1
 
     @abstractmethod
+    def remove_life(p: Player) -> None:
+        if p.lives > 0:
+            p.lives -= 1
+
+    @abstractmethod
     def remove_points(p: Player) -> None:
         if p.score >= 10:
             p.score -= 10
