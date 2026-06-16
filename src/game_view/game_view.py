@@ -1,11 +1,11 @@
 from game_view.map import Map
 from game_view.player import Player
 from scoreboard_view.scoreboard import Scoreboard
+from game_view.ghost.blinky import Blinky
 from game_view.game_menu.left.echap_panel import MenuEchapPanel
 from game_view.game_menu.left.cheat_panel import CheatPanel
 from game_view.game_menu.right.leader_panel import LeadPanel
 from game_view.game_menu.right.stats_panel import StatPanel
-from game_view.ghost.blinky import Blinky
 from .end_view import EndView
 
 import arcade.key as key
@@ -129,8 +129,8 @@ class GameView(arcade.View):
         self.clear()
         self.map.draw()
         self.player.draw()
-        self.blinky.draw()
         self.manager.draw()
+        self.blinky.draw()
         if self.is_paused:
             self.panel_echap.draw_triangle()
         self.window.set_caption("Pacman - In Game")
@@ -173,6 +173,7 @@ class GameView(arcade.View):
         self.manager.enable()
 
     def on_hide_view(self):
+        self.music.stop(player=self.music_player)
         self.manager.disable()
 
     def on_update(self, delta_time):

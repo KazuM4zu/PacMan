@@ -28,6 +28,14 @@ class EndView(arcade.View):
         self.manager = gui.UIManager()
         self.manager.enable()
 
+        self.music = arcade.load_sound("assets/sound/music/loser.mp3",
+                                       streaming=True)
+        self.music_player = arcade.play_sound(
+            self.music,
+            volume=self.config_data.volume / 100,
+            loop=True
+        )
+
         button_style: Dict[str, gui.UIFlatButton.UIStyle] = {
                 "normal": gui.UIFlatButton.UIStyle(
                     font_name="Press Start 2P",
@@ -138,7 +146,10 @@ class EndView(arcade.View):
         self.manager.draw()
 
     def on_exit(self, event: gui.UIOnClickEvent):
-        self.window.show_view(self.main_menu_view)
+        self.music.stop(player=self.music_player)
+        from menu_view.menu_view import MenuView
+        mv = MenuView(self.config_data)
+        self.window.show_view(mv)
 
     def on_save(self, event: gui.UIOnClickEvent) -> None:
         username_str: str = self.username.text.strip()
@@ -149,7 +160,10 @@ class EndView(arcade.View):
             self.sc.update_score(username_str, self.player.score)
             self.scoreboard_view = ScoreView(self.sc, self.main_menu_view,
                                              self.config_data)
-            self.window.show_view(self.scoreboard_view)
+            self.music.stop(player=self.music_player)
+            from menu_view.menu_view import MenuView
+            mv = MenuView(self.config_data)
+            self.window.show_view(mv)
 
     def on_show_view(self) -> None:
         self.manager.enable()
