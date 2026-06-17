@@ -140,7 +140,6 @@ class MenuView(arcade.View):
         self.manager.draw()
 
     def on_key_press(self, symbol, modifiers):
-        print(symbol)
         if symbol == arcade.key.UP:
             self.selected_index = ((self.selected_index - 1)
                                    % len(self.menu_options))

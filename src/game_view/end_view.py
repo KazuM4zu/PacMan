@@ -158,12 +158,12 @@ class EndView(arcade.View):
         else:
             print(f"Username enregistré : {username_str}")
             self.sc.update_score(username_str, self.player.score)
-            self.scoreboard_view = ScoreView(self.sc, self.main_menu_view,
-                                             self.config_data)
             self.music.stop(player=self.music_player)
             from menu_view.menu_view import MenuView
             mv = MenuView(self.config_data)
-            self.window.show_view(mv)
+            self.scoreboard_view = ScoreView(self.sc, mv,
+                                             self.config_data)
+            self.window.show_view(self.scoreboard_view)
 
     def on_show_view(self) -> None:
         self.manager.enable()
