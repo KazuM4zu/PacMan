@@ -2,12 +2,14 @@ from collections import deque
 import arcade.key as key
 import arcade.gui as gui
 import arcade
+import time
 
 
 class Blinky():
-    def __init__(self, map, player):
-        self.map = map
-        self.player = player
+    def __init__(self, manager):
+        self.manager = manager
+        self.map = self.manager.map
+        self.player = self.manager.player
 
         self.cell_pos = [0, 0]
         x, y = self.cell_pos
@@ -19,7 +21,7 @@ class Blinky():
         W = (-1, 0)
         self.dir = N
         self.dx, self.dy = self.dir
-        self.speed = self.map.cell // 16
+        self.speed = self.map.cell // 20
 
     def init_pos(self):
         self.cell_pos = [0, 0]
@@ -47,7 +49,6 @@ class Blinky():
             for direction in [N, S, E, W]:
                 neighbor = (pos[0] + direction[0], pos[1] + direction[1])
 
-                # Vérification des limites
                 if (0 <= neighbor[0] < len(self.map.maze[0]) and
                     0 <= neighbor[1] < len(self.map.maze) and
                     neighbor not in visited and not
@@ -114,7 +115,6 @@ class Blinky():
             self.pos[1] = max(self.pos[1] - self.speed, target[1])
 
         radius = self.map.cell // 3 - 2
-
         if (abs(self.pos[0] - self.player.pos[0]) <= radius and
             abs(self.pos[1] - self.player.pos[1]) <= radius):
-            self.player.death()
+            self.manager.kill_player()

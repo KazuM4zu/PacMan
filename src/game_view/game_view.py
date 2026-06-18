@@ -1,12 +1,14 @@
 from game_view.map import Map
+from .end_view import EndView
 from game_view.player import Player
 from scoreboard_view.scoreboard import Scoreboard
-from game_view.ghost.blinky import Blinky
+from game_view.ghost.ghost_manager import GhostManager
 from game_view.game_menu.left.echap_panel import MenuEchapPanel
 from game_view.game_menu.left.cheat_panel import CheatPanel
-from game_view.game_menu.right.leader_panel import LeadPanel
 from game_view.game_menu.right.stats_panel import StatPanel
-from .end_view import EndView
+from game_view.game_menu.right.leader_panel import LeadPanel
+from game_view.game_menu.left.echap_panel import MenuEchapPanel
+
 
 import arcade.key as key
 import arcade.gui as gui
@@ -25,6 +27,8 @@ class GameView(arcade.View):
 
         self.manager = gui.UIManager()
         self.manager.enable()
+
+
         self.escape_menu = None
         self.settings_menu = None
         self.is_paused = False
@@ -43,6 +47,7 @@ class GameView(arcade.View):
             self.music_player = None
 
         self.generate_level()
+        self.ghost_manager = GhostManager(self.map, self.player)
         self.setup_ui()
 
         arcade.load_font("assets/font/Pacmania.ttf")
@@ -117,12 +122,12 @@ class GameView(arcade.View):
             self.player = Player(self.map, self.config_data)
         else:
             self.player.map = self.map
-            self.player.cell_pos = ([round(self.player.map.size[1] / 2) - 1,
-                                    round(self.player.map.size[0] / 2) - 1])
+            self.player.cell_pos = ([round(self.map.size[0] / 2) - 1,
+                          round(self.map.size[1] / 2) - 1])
             x, y = self.player.cell_pos
             self.player.pos = list(self.player.map.grid[y][x])
             self.player.speed = self.player.map.cell // 16
-        self.blinky = Blinky(self.map, self.player)
+            self.ghost_manager.reset_ghost(self.map)
         self.index_level += 1
 
     def on_draw(self):
@@ -130,7 +135,7 @@ class GameView(arcade.View):
         self.map.draw()
         self.player.draw()
         self.manager.draw()
-        self.blinky.draw()
+        self.ghost_manager.draw()
         if self.is_paused:
             self.panel_echap.draw_triangle()
         self.window.set_caption("Pacman - In Game")
@@ -181,7 +186,7 @@ class GameView(arcade.View):
             self.panel_echap.update_labels()
             return
         self.player.update()
-        self.blinky.update()
+        self.ghost_manager.update()
         self.stat_panel.update_label()
         if (len(self.map.pacgums_list) == 0 and
            self.index_level < len(self.config_data.level)):

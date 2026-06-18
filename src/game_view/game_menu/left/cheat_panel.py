@@ -70,5 +70,7 @@ class CheatPanel(PanelInterface):
             ch.add_life(self.player)
         elif symbol == arcade.key.R:
             ch.remove_life(self.player)
+        elif symbol == arcade.key.N:
+            ch.next_level(self.view)
         self.update_labels()
         self.view.stat_panel.update_label()

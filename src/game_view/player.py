@@ -5,8 +5,8 @@ class Player:
     def __init__(self, map, config_data):
         self.config_data = config_data
         self.map = map
-        self.cell_pos = ([round(self.map.size[1] / 2) - 1,
-                          round(self.map.size[0] / 2) - 1])
+        self.cell_pos = ([round(self.map.size[0] / 2) - 1,
+                          round(self.map.size[1] / 2) - 1])
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
         self.speed = self.map.cell // 16
@@ -102,7 +102,8 @@ class Player:
         self.lives -= 1
         self.dx = 0
         self.dy = 0
-        self.cell_pos = ([round(self.map.size[1] / 2) - 1,
-                          round(self.map.size[0] / 2) - 1])
+        self.cell_pos = ([round(self.map.size[0] / 2) - 1,
+                          round(self.map.size[1] / 2) - 1])
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
+

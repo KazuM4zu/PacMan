@@ -1,5 +1,5 @@
 from .player import Player
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 
 
 class Cheat(ABC):
@@ -28,3 +28,7 @@ class Cheat(ABC):
     @abstractmethod
     def freeze_minotaurs():
         pass
+
+    @abstractmethod
+    def next_level(g):
+        g.generate_level()
