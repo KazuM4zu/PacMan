@@ -102,6 +102,8 @@ class Player:
         self.lives -= 1
         self.dx = 0
         self.dy = 0
+        self.next_dx = 0
+        self.next_dy = 0
         self.cell_pos = ([round(self.map.size[0] / 2) - 1,
                           round(self.map.size[1] / 2) - 1])
         x, y = self.cell_pos
