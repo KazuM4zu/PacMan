@@ -115,6 +115,14 @@ class GameView(arcade.View):
         self.manager.add(anchor_right)
 
     def generate_level(self):
+        if self.index_level == len(self.config_data.level):
+            win = EndView(self.main_menu_view,
+                          self.config_data,
+                          self.player,
+                          self.sc,
+                          defeat=False)
+            self.window.show_view(win)
+            return
         self.map = Map(self.config_data, self.index_level,
                        (self.window.width, self.window.height))
         self.map.generate_maze()
@@ -188,17 +196,18 @@ class GameView(arcade.View):
         self.player.update()
         self.ghost_manager.update()
         self.stat_panel.update_label()
-        if (len(self.map.pacgums_list) == 0 and
-           self.index_level < len(self.config_data.level)):
-            self.generate_level()
-        if self.player.lives == 0:
-            win = EndView(self.main_menu_view,
-                          self.config_data,
-                          self.player,
-                          self.sc,
-                          defeat=True)
-            self.window.show_view(win)
         if self.config_data.cheats_enabled:
             self.cheat_lbl.text = "Cheats enabled !"
         else:
             self.cheat_lbl.text = ""
+
+        if (len(self.map.pacgums_list) == 0):
+            self.generate_level()
+
+        if self.player.lives == 0:
+            lose = EndView(self.main_menu_view,
+                          self.config_data,
+                          self.player,
+                          self.sc,
+                          defeat=True)
+            self.window.show_view(lose)
