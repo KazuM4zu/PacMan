@@ -4,7 +4,7 @@ from game_view.player import Player
 
 
 class PanelInterface:
-    def __init__(self, width: int, height: int, player: Player):
+    def __init__(self, width: int, height: int, player: Player, config_data=None):
         self.width = width
         self.height = height
         self.player = player
@@ -13,6 +13,7 @@ class PanelInterface:
             height=self.height,
             size_hint=None
         )
+        self.config_data = config_data
         arcade.load_font("assets/font/Pacmania.ttf")
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
         self.setup_ui()

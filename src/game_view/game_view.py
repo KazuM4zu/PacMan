@@ -7,7 +7,6 @@ from game_view.game_menu.left.echap_panel import MenuEchapPanel
 from game_view.game_menu.left.cheat_panel import CheatPanel
 from game_view.game_menu.right.stats_panel import StatPanel
 from game_view.game_menu.right.leader_panel import LeadPanel
-from game_view.game_menu.left.echap_panel import MenuEchapPanel
 
 
 import arcade.key as key
@@ -27,7 +26,6 @@ class GameView(arcade.View):
 
         self.manager = gui.UIManager()
         self.manager.enable()
-
 
         self.escape_menu = None
         self.settings_menu = None
@@ -95,8 +93,10 @@ class GameView(arcade.View):
         # RIGHT
         self.right_layout = gui.UIBoxLayout(vertical=True, space_between=20)
         self.stat_panel = StatPanel(
-            width=panel_width, height=200, player=self.player
+            width=panel_width, height=200, player=self.player,
+            config_data=self.config_data
         )
+        self.player.stat_panel = self.stat_panel
         self.lead_panel = LeadPanel(
             width=panel_width, height=800, player=self.player
         )
@@ -131,7 +131,7 @@ class GameView(arcade.View):
         else:
             self.player.map = self.map
             self.player.cell_pos = ([round(self.map.size[0] / 2) - 1,
-                          round(self.map.size[1] / 2) - 1])
+                                    round(self.map.size[1] / 2) - 1])
             x, y = self.player.cell_pos
             self.player.pos = list(self.player.map.grid[y][x])
             self.player.speed = self.player.map.cell // 16
@@ -190,24 +190,35 @@ class GameView(arcade.View):
         self.manager.disable()
 
     def on_update(self, delta_time):
+        print(self.stat_panel.get_time_in_sc())
         if self.is_paused:
             self.panel_echap.update_labels()
             return
         self.player.update()
         self.ghost_manager.update()
         self.stat_panel.update_label()
+        self.stat_panel.update_timer()
         if self.config_data.cheats_enabled:
             self.cheat_lbl.text = "Cheats enabled !"
         else:
             self.cheat_lbl.text = ""
-
+        if (self.stat_panel.get_time_in_sc() == self.config_data.lvl_max_time):
+            time_lose = EndView(
+                self.main_menu_view,
+                self.config_data,
+                self.player,
+                self.sc,
+                defeat=True,
+                time_elap=True
+            )
+            self.window.show_view(time_lose)
         if (len(self.map.pacgums_list) == 0):
             self.generate_level()
 
         if self.player.lives == 0:
             lose = EndView(self.main_menu_view,
-                          self.config_data,
-                          self.player,
-                          self.sc,
-                          defeat=True)
+                           self.config_data,
+                           self.player,
+                           self.sc,
+                           defeat=True)
             self.window.show_view(lose)

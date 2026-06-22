@@ -4,8 +4,9 @@ from game_view.ghost.inky import Inky
 from game_view.ghost.pinky import Pinky
 from game_view.player import Player
 
+
 class GhostManager:
-    def __init__(self, map, player):
+    def __init__(self, map, player: Player):
         self.map = map
         self.player = player
 

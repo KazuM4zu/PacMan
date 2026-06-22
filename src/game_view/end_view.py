@@ -12,7 +12,8 @@ class EndView(arcade.View):
         config_data,
         player,
         scoreboard: Scoreboard,
-        defeat=True
+        defeat=True,
+        time_elap=False
     ) -> None:
         super().__init__()
         arcade.set_background_color(arcade.color.EERIE_BLACK)
@@ -24,6 +25,7 @@ class EndView(arcade.View):
         self.config_data = config_data
         self.player = player
         self.sc = scoreboard
+        self.time_elap = time_elap
 
         self.manager = gui.UIManager()
         self.manager.enable()
@@ -69,7 +71,10 @@ class EndView(arcade.View):
         )
 
         if self.defeat:
-            txt: str = "You lose !"
+            if self.time_elap:
+                txt: str = "Time elapsed, you lose !"
+            else:
+                txt: str = "You lose !"
             color = arcade.color.RED_DEVIL
         else:
             txt = "You win !"
