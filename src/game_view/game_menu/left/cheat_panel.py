@@ -16,7 +16,8 @@ class CheatPanel(PanelInterface):
             "Press '+' to add points",
             "Press '-' to remove points",
             "Press 'L' to add a life",
-            "Press 'R' to remove a life"
+            "Press 'R' to remove a life",
+            "Press 'N' to skip to the next level"
             ]
         self.selected_index = 0
         self.labels = {}
@@ -72,5 +73,6 @@ class CheatPanel(PanelInterface):
             ch.remove_life(self.player)
         elif symbol == arcade.key.N:
             ch.next_level(self.view)
+
         self.update_labels()
         self.view.stat_panel.update_label()

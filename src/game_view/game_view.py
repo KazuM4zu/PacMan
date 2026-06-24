@@ -137,6 +137,8 @@ class GameView(arcade.View):
             self.player.speed = self.player.map.cell // 16
             self.ghost_manager.reset_ghost(self.map)
         self.index_level += 1
+        if hasattr(self, "stat_panel") and self.stat_panel is not None:
+            self.stat_panel.restart_time()
 
     def on_draw(self):
         self.clear()
@@ -214,6 +216,7 @@ class GameView(arcade.View):
             self.window.show_view(time_lose)
         if (len(self.map.pacgums_list) == 0):
             self.generate_level()
+            self.stat_panel.restart_time()
 
         if self.player.lives == 0:
             lose = EndView(self.main_menu_view,
