@@ -1,5 +1,4 @@
 from scoreboard_view.scoreboard import Scoreboard
-
 import arcade
 import arcade.gui as gui
 
@@ -25,7 +24,7 @@ class ScoreView(arcade.View):
             anchor_y="center"
         )
 
-        self.scores_txt = []
+        self.scores_txt: list = []
         self.load_scoreboard()
         self.back_y_pos = 80
         self.back_txt = arcade.Text(

@@ -4,7 +4,10 @@ from game_view.player import Player
 
 
 class PanelInterface:
-    def __init__(self, width: int, height: int, player: Player, config_data=None):
+    def __init__(self, width: int,
+                 height: int,
+                 player: Player,
+                 config_data=None):
         self.width = width
         self.height = height
         self.player = player

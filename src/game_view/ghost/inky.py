@@ -1,8 +1,5 @@
 from collections import deque
-import arcade.key as key
-import arcade.gui as gui
 import arcade
-import time
 
 
 class Inky():
@@ -11,20 +8,20 @@ class Inky():
         self.map = self.manager.map
         self.player = self.manager.player
 
-        self.cell_pos = [self.map.current.width - 1, self.map.current.height - 1]
+        self.cell_pos = [self.map.current.width - 1,
+                         self.map.current.height - 1]
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
 
         N = (0, -1)
-        S = (0,  1)
-        E = (1,  0)
-        W = (-1, 0)
+
         self.dir = N
         self.dx, self.dy = self.dir
         self.speed = self.map.cell // 20
 
     def init_pos(self):
-        self.cell_pos = [self.map.current.width - 1, self.map.current.height - 1]
+        self.cell_pos = [self.map.current.width - 1,
+                         self.map.current.height - 1]
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
 
@@ -52,7 +49,7 @@ class Inky():
                 if (0 <= neighbor[0] < len(self.map.maze[0]) and
                     0 <= neighbor[1] < len(self.map.maze) and
                     neighbor not in visited and not
-                    self.have_wall(list(pos), direction)):
+                        self.have_wall(list(pos), direction)):
                     visited.append(neighbor)
 
                     if first_dir is None:
@@ -70,9 +67,9 @@ class Inky():
 
         current = self.map.maze[pos[1]][pos[0]]
         north = [1, 3, 5, 7, 9, 11, 13, 15]
-        east  = [2, 3, 6, 7, 10, 11, 14, 15]
+        east = [2, 3, 6, 7, 10, 11, 14, 15]
         south = [4, 5, 6, 7, 12, 13, 14, 15]
-        west  = [8, 9, 10, 11, 12, 13, 14, 15]
+        west = [8, 9, 10, 11, 12, 13, 14, 15]
 
         if direction == E and current in east:
             return True
@@ -116,5 +113,5 @@ class Inky():
 
         radius = self.map.cell // 3 - 2
         if (abs(self.pos[0] - self.player.pos[0]) <= radius and
-            abs(self.pos[1] - self.player.pos[1]) <= radius):
+           abs(self.pos[1] - self.player.pos[1]) <= radius):
             self.manager.kill_player()
