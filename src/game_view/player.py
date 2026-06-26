@@ -115,11 +115,6 @@ class Player:
                           round(self.map.size[1] / 2) - 1])
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
-        if hasattr(self, "stat_panel") and self.stat_panel is not None:
-            try:
-                self.stat_panel.restart_time()
-            except Exception:
-                pass
 
     def eat_super(self):
         def reset():
