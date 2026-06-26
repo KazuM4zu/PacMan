@@ -22,6 +22,8 @@ class Player:
         self.next_dy = 0
 
         self.super_mod = False
+        self.invicible = False
+        self.freeze = False
 
     def draw(self):
         arcade.draw_circle_filled(self.pos[0],

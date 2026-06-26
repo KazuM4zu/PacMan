@@ -22,12 +22,18 @@ class Cheat(ABC):
             p.score -= 10
 
     @abstractmethod
-    def set_invicible():
-        pass
+    def set_invicible(p: Player):
+        if not p.invicible:
+            p.invicible = True
+        else:
+            p.invicible = False
 
     @abstractmethod
-    def freeze_minotaurs():
-        pass
+    def freeze_minotaurs(p: Player):
+        if not p.freeze:
+            p.freeze = True
+        else:
+            p.freeze = False
 
     @abstractmethod
     def next_level(g):

@@ -101,7 +101,7 @@ class Clyde():
                                     arcade.color.BLUE)
 
     def update(self):
-        if not self.visible:
+        if not self.visible or self.player.freeze:
             return
         target = list(self.map.grid[self.cell_pos[1]][self.cell_pos[0]])
 
@@ -131,9 +131,9 @@ class Clyde():
         radius = self.map.cell // 3 - 2
         if (abs(self.pos[0] - self.player.pos[0]) <= radius and
            abs(self.pos[1] - self.player.pos[1]) <= radius):
-            if self.player.super_mod == False:
+            if self.player.super_mod == False and self.player.invicible == False:
                 self.manager.kill_player()
-            else:
+            elif self.player.super_mod == True:
                 self.death()
 
     def death(self):
