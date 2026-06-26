@@ -1,14 +1,7 @@
 # PacMan
 
-ajouter les controls clavier dans escape menu
+wasd
 passer le fichier de config en argument au main (argc, argv)
 sprite
-menu de jeu
-settings a refaire
-bande son du jeu
-effet sonore
-
-jeu:
-phantom
-timer
-victoire/defaite
+temps a ne pas reset si dc
+algo fantome

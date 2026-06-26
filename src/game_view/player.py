@@ -1,4 +1,6 @@
 import arcade
+import threading
+import time
 
 
 class Player:
@@ -18,6 +20,8 @@ class Player:
         self.dy = 0
         self.next_dx = 0
         self.next_dy = 0
+
+        self.super_mod = False
 
     def draw(self):
         arcade.draw_circle_filled(self.pos[0],
@@ -76,6 +80,7 @@ class Player:
                     super_pacgums.kill()
                     self.map.collects[self.cell_pos[1]][self.cell_pos[0]] = 0
                     self.score += self.config_data.pt_per_super_pacgum
+                    self.eat_super()
                     break
 
         # print(self.score)
@@ -113,3 +118,12 @@ class Player:
                 self.stat_panel.restart_time()
             except Exception:
                 pass
+
+    def eat_super(self):
+        def reset():
+            self.super_mod = True
+            time.sleep(7)
+            self.super_mod = False
+
+        thread = threading.Thread(target=reset)
+        thread.start()

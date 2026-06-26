@@ -192,7 +192,7 @@ class GameView(arcade.View):
         self.manager.disable()
 
     def on_update(self, delta_time):
-        print(self.stat_panel.get_time_in_sc())
+        # print(self.stat_panel.get_time_in_sc())
         if self.is_paused:
             self.panel_echap.update_labels()
             return
