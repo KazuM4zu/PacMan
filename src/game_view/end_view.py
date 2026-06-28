@@ -156,10 +156,18 @@ class EndView(arcade.View):
         mv = MenuView(self.config_data)
         self.window.show_view(mv)
 
+    def is_alnum_space(self, s: str):
+        return all(c.isalpha() or c.isspace() or c.isnumeric() for c in s)
+
     def on_save(self, event: gui.UIOnClickEvent) -> None:
         username_str: str = self.username.text.strip()
         if username_str == "":
             self.error_msg.text = "The username cannot be empty !"
+        elif not self.is_alnum_space(username_str):
+            self.error_msg.text = ("The username can only contain"
+                                   " alphanumeric characters and spaces.")
+        elif len(username_str) > 10:
+            self.error_msg.text = "The username must not exceed 10 characters."
         else:
             print(f"Username enregistré : {username_str}")
             self.sc.update_score(username_str, self.player.score)

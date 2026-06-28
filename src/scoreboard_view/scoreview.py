@@ -73,7 +73,7 @@ class ScoreView(arcade.View):
             )
             self.scores_txt.append(txt)
             return
-        for i, (name, score) in enumerate(scores_tries[:15]):
+        for i, (name, score) in enumerate(scores_tries[:10]):
             display_name = name.upper()
             trunc = len(display_name) > 40
             shown = display_name[:40]
