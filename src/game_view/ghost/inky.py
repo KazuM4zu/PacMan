@@ -21,6 +21,16 @@ class Inky():
         self.dx, self.dy = self.dir
         self.speed = self.map.cell // 20
         self.visible = True
+        self.normal_texture = arcade.load_texture(
+            f"assets/sprite/{self.__class__.__name__.lower()}.png"
+        )
+        self.eat_texture = arcade.load_texture("assets/sprite/eat.png")
+        self.sprite_size = self.map.cell * 0.8
+        self.normal_texture = arcade.load_texture(
+            f"assets/sprite/{self.__class__.__name__.lower()}.png"
+        )
+        self.eat_texture = arcade.load_texture("assets/sprite/eat.png")
+        self.sprite_size = self.map.cell * 0.8
 
     def init_pos(self):
         self.cell_pos = [self.map.current.width - 1,
@@ -86,21 +96,16 @@ class Inky():
         return False
 
     def draw(self):
-        if not self.visible:
-            arcade.draw_circle_filled(self.pos[0],
-                                      self.pos[1],
-                                      self.map.cell // 3 - 2,
-                                      (0, 0, 255, 230))
-        if self.player.super_mod == False:
-            arcade.draw_circle_filled(self.pos[0],
-                                    self.pos[1],
-                                    self.map.cell // 3 - 2,
-                                    arcade.color.CYAN)
-        else:
-            arcade.draw_circle_filled(self.pos[0],
-                                    self.pos[1],
-                                    self.map.cell // 3 - 2,
-                                    arcade.color.BLUE)
+        texture = self.eat_texture if self.player.super_mod or not self.visible else self.normal_texture
+        rect = arcade.Rect(self.pos[0] - self.sprite_size / 2,
+                           self.pos[0] + self.sprite_size / 2,
+                           self.pos[1] - self.sprite_size / 2,
+                           self.pos[1] + self.sprite_size / 2,
+                           self.sprite_size,
+                           self.sprite_size,
+                           self.pos[0],
+                           self.pos[1])
+        arcade.draw_texture_rect(texture, rect)
 
     def update(self):
         if not self.visible or self.player.freeze:
