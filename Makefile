@@ -1,6 +1,7 @@
 FLAGS = --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs --follow-imports=skip
 
 SRC = ./src/
+CONFIG ?= config.json
 
 install:
 	@uv sync
@@ -8,11 +9,11 @@ install:
 
 run:
 	@clear
-	@uv run -m src
+	@uv run src/ $(CONFIG)
 
 debug:
 	@clear
-	@uv run -m pdb -m src
+	@uv run -m pdb -m src $(CONFIG)
 
 clean:
 	@clear
