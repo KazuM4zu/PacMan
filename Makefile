@@ -1,3 +1,5 @@
+export UV_SKIP_WHEEL_FILENAME_CHECK=1
+
 FLAGS = --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs --follow-imports=skip
 
 SRC = ./src/
