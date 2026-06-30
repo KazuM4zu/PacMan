@@ -1,11 +1,11 @@
 import arcade
 import arcade.color
 import arcade.key
-from typing import List
+from typing import List, Any
 
 
 class SettingView(arcade.View):
-    def __init__(self, last_view, config_data) -> None:
+    def __init__(self, last_view: Any, config_data: Any) -> None:
         super().__init__()
         self.config_data = config_data
         self.last_view = last_view
@@ -101,7 +101,7 @@ class SettingView(arcade.View):
         elif symbol in (arcade.key.ENTER, arcade.key.SPACE):
             self.execute_action()
 
-    def on_update(self, delta_time):
+    def on_update(self, delta_time: float) -> None:
         if (self.config_data.volume != self.volume or
            self.b_cheat != self.config_data.cheats_enabled):
             self.config_data.volume = self.volume

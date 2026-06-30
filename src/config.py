@@ -1,6 +1,7 @@
 import json
 from pydantic import BaseModel, ValidationError, Field
 from pydantic import NonNegativeInt, PositiveInt
+from typing import Any
 
 
 class LevelModel(BaseModel):
@@ -27,7 +28,7 @@ class Config(BaseModel):
             json.dump(self.model_dump(), f, ensure_ascii=False, indent=4)
 
 
-def check_config_file(config_file):
+def check_config_file(config_file: Any) -> Config:
     try:
         with open(config_file, "r", encoding="utf-8") as f:
             data_config = json.load(f)
@@ -36,8 +37,12 @@ def check_config_file(config_file):
         return valid_function
     except FileNotFoundError:
         raise FileNotFoundError(f"'{config_file}' file was not found")
-    except json.JSONDecodeError:
-        raise json.JSONDecodeError(f"'{config_file}' is not a valid JSON file")
+    except json.JSONDecodeError as e:
+        raise json.JSONDecodeError(
+            f"'{config_file}' is not a valid JSON file",
+            e.doc,
+            e.pos,
+        ) from e
     except ValidationError as e:
         raise ValueError(e)
 

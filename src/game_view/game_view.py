@@ -8,28 +8,35 @@ from game_view.game_menu.left.cheat_panel import CheatPanel
 from game_view.game_menu.right.stats_panel import StatPanel
 from game_view.game_menu.right.leader_panel import LeadPanel
 
-
 import arcade.key as key
 import arcade.gui as gui
 import arcade
 
+from typing import Any, Optional
+
 
 class GameView(arcade.View):
-    def __init__(self, main_menu_view, config_data):
+    def __init__(self, main_menu_view: arcade.View, config_data: Any) -> None:
         super().__init__()
 
         self.main_menu_view = main_menu_view
         self.config_data = config_data
         self.sc = Scoreboard()
-        self.index_level = 0
-        self.first_game = True
+        self.index_level: int = 0
+        self.first_game: bool = True
 
         self.manager = gui.UIManager()
         self.manager.enable()
 
-        self.escape_menu = None
-        self.settings_menu = None
-        self.is_paused = False
+        self.escape_menu: Optional[Any] = None
+        self.settings_menu: Optional[Any] = None
+        self.is_paused: bool = False
+
+        self.stat_panel: Optional[StatPanel] = None
+        self.map: Optional[Map] = None
+        self.player: Optional[Player] = None
+        self.music: Optional[arcade.Sound] = None
+        self.music_player: Optional[Any]
 
         try:
             self.music = arcade.load_sound("assets/sound/music/game_music.mp3",
@@ -54,7 +61,7 @@ class GameView(arcade.View):
     def setup_ui(self) -> None:
         panel_width: int = (self.window.width // 4) - 10
         self.top_anchor = gui.UIAnchorLayout()
-        txt = ""
+        txt: str = ""
         if self.config_data.cheats_enabled:
             txt = "Cheats enabled !"
         self.cheat_lbl = gui.UILabel(
@@ -96,7 +103,10 @@ class GameView(arcade.View):
             width=panel_width, height=200, player=self.player,
             config_data=self.config_data
         )
-        self.player.stat_panel = self.stat_panel
+
+        if self.player is not None:
+            self.player.stat_panel = self.stat_panel
+
         self.lead_panel = LeadPanel(
             width=panel_width, height=800, player=self.player
         )
@@ -114,7 +124,7 @@ class GameView(arcade.View):
         )
         self.manager.add(anchor_right)
 
-    def generate_level(self):
+    def generate_level(self) -> None:
         if self.index_level == len(self.config_data.level):
             win = EndView(self.main_menu_view,
                           self.config_data,
@@ -128,7 +138,7 @@ class GameView(arcade.View):
         self.map.generate_maze()
         if self.index_level == 0:
             self.player = Player(self.map, self.config_data)
-        else:
+        elif self.player is not None:
             self.player.map = self.map
             self.player.cell_pos = ([round(self.map.size[0] / 2) - 1,
                                     round(self.map.size[1] / 2) - 1])
@@ -137,13 +147,15 @@ class GameView(arcade.View):
             self.player.speed = self.player.map.cell // 16
             self.ghost_manager.reset_ghost(self.map)
         self.index_level += 1
-        if hasattr(self, "stat_panel") and self.stat_panel is not None:
+        if self.stat_panel is not None:
             self.stat_panel.restart_time()
 
-    def on_draw(self):
+    def on_draw(self) -> None:
         self.clear()
-        self.map.draw()
-        self.player.draw()
+        if self.map:
+            self.map.draw()
+        if self.player:
+            self.player.draw()
         self.manager.draw()
         self.ghost_manager.draw()
         if self.is_paused:
@@ -151,7 +163,7 @@ class GameView(arcade.View):
         self.window.set_caption("Pacman - In Game")
         arcade.set_background_color(arcade.color.BLACK)
 
-    def pause_game(self):
+    def pause_game(self) -> None:
         self.is_paused = not self.is_paused
         if self.is_paused:
             self.left_box.clear()
@@ -162,10 +174,11 @@ class GameView(arcade.View):
         else:
             self.manager.remove(self.left_anchor)
 
-    def on_key_press(self, symbol, modifiers):
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
         if self.config_data.cheats_enabled:
             self.panel_cheat.on_key_press(symbol, modifiers)
-        self.player.on_key_press(symbol, modifiers)
+        if self.player:
+            self.player.on_key_press(symbol, modifiers)
 
         if symbol == key.ESCAPE:
             self.pause_game()
@@ -181,47 +194,52 @@ class GameView(arcade.View):
 
         if self.is_paused:
             self.panel_echap.on_key_press(symbol, modifiers)
-        else:
-            self.player.on_key_press(symbol, modifiers)
 
-    def on_show_view(self):
+    def on_show_view(self) -> None:
         self.manager.enable()
 
-    def on_hide_view(self):
-        self.music.stop(player=self.music_player)
+    def on_hide_view(self) -> None:
+        if self.music and self.music_player:
+            self.music.stop(player=self.music_player)
         self.manager.disable()
 
-    def on_update(self, delta_time):
-        # print(self.stat_panel.get_time_in_sc())
+    def on_update(self, delta_time: float) -> None:
         if self.is_paused:
             self.panel_echap.update_labels()
             return
-        self.player.update()
+
+        if self.player:
+            self.player.update()
+            if self.player.lives == 0:
+                lose = EndView(self.main_menu_view,
+                               self.config_data,
+                               self.player,
+                               self.sc,
+                               defeat=True)
+                self.window.show_view(lose)
         self.ghost_manager.update()
-        self.stat_panel.update_label()
-        self.stat_panel.update_timer()
+
+        if self.stat_panel:
+            self.stat_panel.update_label()
+            self.stat_panel.update_timer()
+            if (self.stat_panel.get_time_in_sc()
+               == self.config_data.lvl_max_time):
+                time_lose = EndView(
+                    self.main_menu_view,
+                    self.config_data,
+                    self.player,
+                    self.sc,
+                    defeat=True,
+                    time_elap=True
+                )
+                self.window.show_view(time_lose)
+
         if self.config_data.cheats_enabled:
             self.cheat_lbl.text = "Cheats enabled !"
         else:
             self.cheat_lbl.text = ""
-        if (self.stat_panel.get_time_in_sc() == self.config_data.lvl_max_time):
-            time_lose = EndView(
-                self.main_menu_view,
-                self.config_data,
-                self.player,
-                self.sc,
-                defeat=True,
-                time_elap=True
-            )
-            self.window.show_view(time_lose)
-        if (len(self.map.pacgums_list) == 0):
-            self.generate_level()
-            self.stat_panel.restart_time()
 
-        if self.player.lives == 0:
-            lose = EndView(self.main_menu_view,
-                           self.config_data,
-                           self.player,
-                           self.sc,
-                           defeat=True)
-            self.window.show_view(lose)
+        if self.map and len(self.map.pacgums_list) == 0:
+            self.generate_level()
+            if self.stat_panel:
+                self.stat_panel.restart_time()

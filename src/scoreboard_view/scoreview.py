@@ -1,10 +1,12 @@
 from scoreboard_view.scoreboard import Scoreboard
 import arcade
 import arcade.gui as gui
+from typing import Any
 
 
 class ScoreView(arcade.View):
-    def __init__(self, scoreboard: Scoreboard, last_view, config_data):
+    def __init__(self, scoreboard: Scoreboard,
+                 last_view: Any, config_data: Any) -> None:
         super().__init__()
         self.last_view = last_view
         self.sc = scoreboard
@@ -38,7 +40,7 @@ class ScoreView(arcade.View):
         )
         self.back_selected = False
 
-    def update_position(self):
+    def update_position(self) -> None:
         center_x = self.window.width // 2
 
         self.title_text.x = center_x
@@ -53,7 +55,7 @@ class ScoreView(arcade.View):
             txt_obj.x = center_x
             txt_obj.y = start_y - (i * spacing)
 
-    def load_scoreboard(self):
+    def load_scoreboard(self) -> None:
         scores = self.sc.get_scores()
 
         scores_tries = sorted(scores.items(),
@@ -97,17 +99,17 @@ class ScoreView(arcade.View):
             )
             self.scores_txt.append(txt)
 
-    def on_show_view(self):
+    def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.EERIE_BLACK)
         self.manager.enable()
         self.window.set_caption("DarkMan - Scoreboard")
         self.scores_txt = []
         self.load_scoreboard()
 
-    def on_hide_view(self):
+    def on_hide_view(self) -> None:
         self.manager.disable()
 
-    def on_draw(self):
+    def on_draw(self) -> None:
         self.clear()
         self.update_position()
         self.title_text.draw()
@@ -128,14 +130,15 @@ class ScoreView(arcade.View):
                 arcade.color.RED_DEVIL
             )
 
-    def on_key_press(self, symbol, modifiers):
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
         if symbol in (arcade.key.UP, arcade.key.DOWN):
             self.back_selected = True
         elif (symbol == (arcade.key.SPACE)
               and self.back_selected):
             self.execute_back()
 
-    def on_mouse_motion(self, x, y, dx, dy):
+    def on_mouse_motion(self, x: float, y: float,
+                        dx: float, dy: float) -> None:
         center_x = self.window.width // 2
         hitbox_w = 150
         hitbox_h = 35
@@ -147,11 +150,13 @@ class ScoreView(arcade.View):
 
         self.back_selected = (left < x < right and bot < y < top)
 
-    def on_mouse_press(self, x, y, button, modifiers):
+    def on_mouse_press(self,
+                       x: float, y: float,
+                       button: int, modifiers: int) -> None:
         if button == arcade.MOUSE_BUTTON_LEFT and self.back_selected:
             self.execute_back()
 
-    def execute_back(self):
+    def execute_back(self) -> None:
         self.window.show_view(self.last_view)
 
 

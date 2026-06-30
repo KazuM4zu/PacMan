@@ -1,37 +1,41 @@
+from typing import List, Any
+
 import arcade
 import threading
 import time
 
 
 class Player:
-    def __init__(self, map, config_data):
+    def __init__(self, map: Any, config_data: Any) -> None:
         self.config_data = config_data
         self.map = map
         self.cell_pos = ([round(self.map.size[0] / 2) - 1,
                           round(self.map.size[1] / 2) - 1])
         x, y = self.cell_pos
-        self.pos = list(self.map.grid[y][x])
-        self.speed = self.map.cell // 16
+        self.pos: List[float] = list(self.map.grid[y][x])
+        self.speed: int = self.map.cell // 16
 
-        self.score = 0
-        self.lives = self.map.config_data.lives
+        self.score: int = 0
+        self.lives: int = self.map.config_data.lives
 
-        self.dx = 0
-        self.dy = 0
-        self.next_dx = 0
-        self.next_dy = 0
+        self.dx: int = 0
+        self.dy: int = 0
+        self.next_dx: int = 0
+        self.next_dy: int = 0
 
-        self.super_mod = False
-        self.invicible = False
-        self.freeze = False
+        self.super_mod: bool = False
+        self.invicible: bool = False
+        self.freeze: bool = False
 
-    def draw(self):
+        self.stat_panel: Any = None
+
+    def draw(self) -> None:
         arcade.draw_circle_filled(self.pos[0],
                                   self.pos[1],
                                   self.map.cell // 3 - 2,
                                   arcade.color.YELLOW)
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key: int, modifiers: int) -> None:
         if key == arcade.key.LEFT:
             self.next_dx = -1
             self.next_dy = 0
@@ -45,7 +49,7 @@ class Player:
             self.next_dx = 0
             self.next_dy = -1
 
-    def update(self):
+    def update(self) -> None:
         cx, cy = self.map.grid[self.cell_pos[1]][self.cell_pos[0]]
         if self.pos == list(self.map.grid[self.cell_pos[1]][self.cell_pos[0]]):
             if not self.have_wall(self.next_dx, self.next_dy):
@@ -85,9 +89,7 @@ class Player:
                     self.eat_super()
                     break
 
-        # print(self.score)
-
-    def have_wall(self, nx: int, ny: int):
+    def have_wall(self, nx: int, ny: int) -> bool:
         current = self.map.maze[self.cell_pos[1]][self.cell_pos[0]]
         north = [1, 3, 5, 7, 9, 11, 13, 15]
         east = [2, 3, 6, 7, 10, 11, 14, 15]
@@ -105,7 +107,7 @@ class Player:
 
         return False
 
-    def death(self):
+    def death(self) -> None:
         self.lives -= 1
         self.dx = 0
         self.dy = 0
@@ -116,8 +118,8 @@ class Player:
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
 
-    def eat_super(self):
-        def reset():
+    def eat_super(self) -> None:
+        def reset() -> None:
             self.super_mod = True
             time.sleep(7)
             self.super_mod = False

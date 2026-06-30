@@ -1,12 +1,12 @@
 import arcade
 import arcade.gui as gui
 from arcade.clock import GLOBAL_CLOCK
-from ..panel import PanelInterface
+from game_view.game_menu.panel import PanelInterface
 
 
 class StatPanel(PanelInterface):
-    def setup_ui(self):
-        self.start_time = GLOBAL_CLOCK.time
+    def setup_ui(self) -> None:
+        self.start_time: float = GLOBAL_CLOCK.time
         box = gui.UIBoxLayout(vertical=True, space_between=20)
 
         title = gui.UILabel(
@@ -51,11 +51,11 @@ class StatPanel(PanelInterface):
             anchor_y="center_y"
         )
 
-    def update_label(self):
+    def update_label(self) -> None:
         self.score_label.text = f"Score: {self.player.score:04d}"
         self.live_label.text = f"Lifes: {self.player.lives}"
 
-    def update_timer(self):
+    def update_timer(self) -> None:
         elaps = GLOBAL_CLOCK.time_since(self.start_time)
 
         time_remaining = self.config_data.lvl_max_time - elaps
@@ -63,8 +63,8 @@ class StatPanel(PanelInterface):
         ms = int((time_remaining - sec) * 100)
         self.timer_label.text = f"Timer: {sec}:{ms:02d}"
 
-    def get_time_in_sc(self):
+    def get_time_in_sc(self) -> int:
         return int(GLOBAL_CLOCK.time_since(self.start_time))
 
-    def restart_time(self):
+    def restart_time(self) -> None:
         self.start_time = GLOBAL_CLOCK.time

@@ -1,15 +1,16 @@
 import json
 import os
 from pathlib import Path
+from typing import Dict
 
 
 class Scoreboard:
-    file_path = Path(__file__).parent.parent.parent / "scoreboard.json"
+    file_path: Path = Path(__file__).parent.parent.parent / "scoreboard.json"
 
-    def __init__(self):
+    def __init__(self) -> None:
         if not os.path.exists(self.file_path):
             print("The scoreboard.json file does not exist. Creating...")
-            self.data = {}
+            self.data: Dict[str, int] = {}
             self.save_file()
         else:
             print("The scoreboard.json file has been found. Loading...")
@@ -22,9 +23,9 @@ class Scoreboard:
                     self.data = {}
                     self.save_file()
 
-    def check_data(self, data_file: dict):
-        cleaned_data = {}
-        is_modify = False
+    def check_data(self, data_file: dict) -> Dict[str, int]:
+        cleaned_data: Dict[str, int] = {}
+        is_modify: bool = False
 
         for player, score in data_file.items():
             if (self.is_valid_name(player) and isinstance(score, int) and
@@ -40,7 +41,7 @@ class Scoreboard:
             self.save_file()
         return cleaned_data
 
-    def is_valid_name(self, name: str):
+    def is_valid_name(self, name: str) -> bool:
         n_strip = name.strip()
         if n_strip == "":
             return False
@@ -50,7 +51,7 @@ class Scoreboard:
             return False
         return True
 
-    def update_score(self, player, score):
+    def update_score(self, player: str, score: int) -> None:
         if player in self.data:
             if score > self.data[player]:
                 print(f"New record for {player}: {score}")
@@ -60,14 +61,14 @@ class Scoreboard:
             self.data[player] = score
         self.save_file()
 
-    def print_scoreboard(self):
+    def print_scoreboard(self) -> None:
         print("------ Scoreboard ------")
         for name, score in self.data.items():
             print(f"- {name}: {score}")
 
-    def save_file(self):
+    def save_file(self) -> None:
         with open(self.file_path, "w", encoding="utf-8") as f:
             json.dump(self.data, f, indent=4)
 
-    def get_scores(self):
+    def get_scores(self) -> Dict[str, int]:
         return self.data

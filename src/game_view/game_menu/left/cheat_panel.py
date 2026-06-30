@@ -1,16 +1,20 @@
 import arcade.gui as gui
-from ..panel import PanelInterface
+from game_view.game_menu.panel import PanelInterface
 import arcade
-from ...cheat import Cheat as ch
+from game_view.cheat import Cheat as ch
 
+from typing import Any, Dict, List
 
 L_INVI = "Press 'I' to become invincible"
 L_FREE = "Press 'f' to freeze the minotaurs"
 
 
 class CheatPanel(PanelInterface):
-    def __init__(self, width, height, player, view):
-        self.menu_options = [
+    def __init__(self, width: int,
+                 height: int,
+                 player: Any,
+                 view: Any) -> None:
+        self.menu_options: List[str] = [
             L_INVI,
             L_FREE,
             "Press '+' to add points",
@@ -19,21 +23,21 @@ class CheatPanel(PanelInterface):
             "Press 'R' to remove a life",
             "Press 'N' to skip to the next level"
             ]
-        self.selected_index = 0
-        self.labels = {}
-        self.view = view
-        self.b_invicible = False
-        self.b_freeze = False
+        self.selected_index: int = 0
+        self.labels: Dict[int, gui.UILabel] = {}
+        self.view: Any = view
+        self.b_invicible: bool = False
+        self.b_freeze: bool = False
         super().__init__(width, height, player)
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         self.box = gui.UIBoxLayout(vertical=True, space_between=25)
         self.layout.add(child=self.box,
                         anchor_x="center_x",
                         anchor_y="center_y")
         self.update_labels()
 
-    def update_labels(self):
+    def update_labels(self) -> None:
         self.box.clear()
         for i, option in enumerate(self.menu_options):
             color = arcade.color.WHITE
@@ -54,7 +58,7 @@ class CheatPanel(PanelInterface):
             self.labels[i] = label
             self.box.add(label)
 
-    def on_key_press(self, symbol, modifiers):
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
         if symbol == arcade.key.I:
             if not self.b_invicible:
                 ch.set_invicible(self.player)
@@ -75,4 +79,5 @@ class CheatPanel(PanelInterface):
             ch.next_level(self.view)
 
         self.update_labels()
-        self.view.stat_panel.update_label()
+        if self.view.stat_panel is not None:
+            self.view.stat_panel.update_label()

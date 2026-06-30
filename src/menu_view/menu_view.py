@@ -10,28 +10,33 @@ from setting_view.settings import SettingView
 from scoreboard_view.scoreboard import Scoreboard
 from scoreboard_view.scoreview import ScoreView
 
+from typing import Any, List, Optional, cast
+
 
 class MenuView(arcade.View):
     _fire_anim = None
     _elmo_anim = None
 
-    def __init__(self, config_data):
+    def __init__(self, config_data: Any) -> None:
         super().__init__()
-        self.config_data = config_data
+        self.config_data: Any = config_data
 
         self.manager = arcade.gui.UIManager()
 
-        self.selected_index = 0
-        self.menu_options = ["Play", "Scoreboards", "Settings", "Exit"]
-        self.menu_spacing = 45
+        self.selected_index: int = 0
+        self.menu_options: List[str] = ["Play",
+                                        "Scoreboards",
+                                        "Settings",
+                                        "Exit"]
+        self.menu_spacing: int = 45
 
-        self.settings_menu = None
+        self.settings_menu: Optional[SettingView] = None
 
         arcade.load_font("assets/font/Pacmania.ttf")
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
 
-        self.font_size = 20
-        self.sprites = arcade.SpriteList()
+        self.font_size: int = 20
+        self.sprites: arcade.SpriteList = arcade.SpriteList()
         self.title_logo = arcade.Sprite(
             "assets/images/logoDarkMan2.png"
         )
@@ -41,7 +46,7 @@ class MenuView(arcade.View):
                                                       + "/images/"
                                                       + "background.png")
 
-        self.menu_texts = []
+        self.menu_texts: List[arcade.Text] = []
         for i, option in enumerate(self.menu_options):
             text_obj = arcade.Text(
                 text=option,
@@ -73,7 +78,7 @@ class MenuView(arcade.View):
         self.fire_top = pyglet.sprite.Sprite(MenuView._fire_anim)
         self.elmo = pyglet.sprite.Sprite(MenuView._elmo_anim)
 
-    def on_show_view(self):
+    def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.EERIE_BLACK)
         self.manager.enable()
         self.window.set_caption("Pacman - Menu")
@@ -87,15 +92,15 @@ class MenuView(arcade.View):
             self.title_logo.center_x = self.window.width // 2
             self.title_logo.center_y = self.window.height - 250
 
-    def on_hide_view(self):
+    def on_hide_view(self) -> None:
         self.manager.disable()
 
-    def update_position(self):
-        center_x = self.window.width // 2
-        start_y = int(self.window.height * 0.6)
-
-        self.title_logo.x = center_x
-        self.title_logo.y = self.window.height - 100
+    def update_position(self) -> None:
+        center_x: int = self.window.width // 2
+        start_y: int = int(self.window.height * 0.6)
+        cast_sprite = cast(Any, self.title_logo)
+        cast_sprite.x = center_x
+        cast_sprite.y = self.window.height - 100
 
         for i, text_obj in enumerate(self.menu_texts):
             text_obj.x = center_x
@@ -103,11 +108,11 @@ class MenuView(arcade.View):
 
         self.fire_top.x = 0
         self.fire_top.y = 0
-        elmo_x = center_x - (self.elmo.width // 2)
+        elmo_x: float = center_x - (self.elmo.width // 2)
         self.elmo.x = elmo_x
         self.elmo.y = self.title_logo.top - 20
 
-    def on_draw(self):
+    def on_draw(self) -> None:
         self.clear()
         self.update_position()
         arcade.draw_texture_rect(
@@ -117,7 +122,7 @@ class MenuView(arcade.View):
         self.fire_top.draw()
         self.elmo.draw()
         self.sprites.draw()
-        center_x = self.window.width // 2
+        center_x: int = self.window.width // 2
         for i, text_obj in enumerate(self.menu_texts):
             if i == self.selected_index:
                 text_obj.color = arcade.color.WHITE
@@ -139,7 +144,7 @@ class MenuView(arcade.View):
                 )
         self.manager.draw()
 
-    def on_key_press(self, symbol, modifiers):
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
         if symbol == arcade.key.UP:
             self.selected_index = ((self.selected_index - 1)
                                    % len(self.menu_options))
@@ -149,11 +154,12 @@ class MenuView(arcade.View):
         elif symbol == arcade.key.SPACE:
             self.execute_action()
 
-    def execute_action(self):
-        selected = self.menu_options[self.selected_index]
+    def execute_action(self) -> None:
+        selected: str = self.menu_options[self.selected_index]
 
         if selected == "Play":
-            self.music.stop(player=self.music_player)
+            if self.music and self.music_player:
+                self.music.stop(player=self.music_player)
             game_view = GameView(self, self.config_data)
             self.window.show_view(game_view)
 
@@ -168,9 +174,13 @@ class MenuView(arcade.View):
             score_view = ScoreView(Scoreboard(), self, self.config_data)
             self.window.show_view(score_view)
 
-    def on_mouse_motion(self, x, y, dx, dy):
-        center_x = self.window.width // 2
-        start_y = int(self.window.height * 0.6)
+    def on_mouse_motion(self,
+                        x: float,
+                        y: float,
+                        dx: float,
+                        dy: float) -> None:
+        center_x: int = self.window.width // 2
+        start_y: int = int(self.window.height * 0.6)
         for i in range(len(self.menu_options)):
             item_y = start_y - (i * self.menu_spacing)
 
@@ -186,11 +196,12 @@ class MenuView(arcade.View):
                 self.selected_index = i
                 break
 
-    def on_mouse_press(self, x, y, button, modifiers):
+    def on_mouse_press(self, x: float, y: float,
+                       button: int, modifiers: int) -> None:
         if button == arcade.MOUSE_BUTTON_LEFT:
-            start_y = int(self.window.height * 0.6)
-            item_y = start_y - (self.selected_index
-                                * self.menu_spacing)
+            start_y: int = int(self.window.height * 0.6)
+            item_y: int = start_y - (
+                self.selected_index * self.menu_spacing)
             hitbox_height = self.font_size + 15
             if item_y - hitbox_height // 2 < y < item_y + hitbox_height // 2:
                 self.execute_action()

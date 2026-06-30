@@ -1,6 +1,6 @@
 import arcade
 import arcade.gui as gui
-from typing import Dict
+from typing import Dict, Any
 from scoreboard_view.scoreboard import Scoreboard
 from scoreboard_view.scoreview import ScoreView
 
@@ -8,24 +8,24 @@ from scoreboard_view.scoreview import ScoreView
 class EndView(arcade.View):
     def __init__(
         self,
-        main_menu_view,
-        config_data,
-        player,
+        main_menu_view: Any,
+        config_data: Any,
+        player: Any,
         scoreboard: Scoreboard,
-        defeat=True,
-        time_elap=False
+        defeat: bool = True,
+        time_elap: bool = False
     ) -> None:
         super().__init__()
         arcade.set_background_color(arcade.color.EERIE_BLACK)
 
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
 
-        self.defeat = defeat
-        self.main_menu_view = main_menu_view
-        self.config_data = config_data
-        self.player = player
-        self.sc = scoreboard
-        self.time_elap = time_elap
+        self.defeat: bool = defeat
+        self.main_menu_view: Any = main_menu_view
+        self.config_data: Any = config_data
+        self.player: Any = player
+        self.sc: Scoreboard = scoreboard
+        self.time_elap: bool = time_elap
 
         self.manager = gui.UIManager()
         self.manager.enable()
@@ -69,12 +69,12 @@ class EndView(arcade.View):
             vertical=True,
             space_between=15
         )
-
+        txt: str = ""
         if self.defeat:
             if self.time_elap:
-                txt: str = "Time elapsed, you lose !"
+                txt = "Time elapsed, you lose !"
             else:
-                txt: str = "You lose !"
+                txt = "You lose !"
             color = arcade.color.RED_DEVIL
         else:
             txt = "You win !"
@@ -127,7 +127,7 @@ class EndView(arcade.View):
                 style=button_style
             )
             box_layout.add(self.save_button)
-            self.save_button.on_click = self.on_save
+            setattr(self.save_button, "on_click", self.on_save)
 
         self.exit_button = gui.UIFlatButton(
             text="Do not save and exit",
@@ -136,7 +136,7 @@ class EndView(arcade.View):
             style=button_style
         )
         box_layout.add(self.exit_button)
-        self.exit_button.on_click = self.on_exit
+        setattr(self.exit_button, "on_click", self.on_exit)
 
         anchor = gui.UIAnchorLayout()
         anchor.add(
@@ -150,13 +150,14 @@ class EndView(arcade.View):
         self.clear()
         self.manager.draw()
 
-    def on_exit(self, event: gui.UIOnClickEvent):
-        self.music.stop(player=self.music_player)
+    def on_exit(self, event: gui.UIOnClickEvent) -> None:
+        if self.music and self.music_player:
+            self.music.stop(player=self.music_player)
         from menu_view.menu_view import MenuView
         mv = MenuView(self.config_data)
         self.window.show_view(mv)
 
-    def is_alnum_space(self, s: str):
+    def is_alnum_space(self, s: str) -> bool:
         return all(c.isalpha() or c.isspace() or c.isnumeric() for c in s)
 
     def on_save(self, event: gui.UIOnClickEvent) -> None:
@@ -169,9 +170,9 @@ class EndView(arcade.View):
         elif len(username_str) > 10:
             self.error_msg.text = "The username must not exceed 10 characters."
         else:
-            print(f"Username enregistré : {username_str}")
             self.sc.update_score(username_str, self.player.score)
-            self.music.stop(player=self.music_player)
+            if self.music and self.music_player:
+                self.music.stop(player=self.music_player)
             from menu_view.menu_view import MenuView
             mv = MenuView(self.config_data)
             self.scoreboard_view = ScoreView(self.sc, mv,

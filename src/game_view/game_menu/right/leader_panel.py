@@ -1,10 +1,10 @@
 import arcade
 import arcade.gui as gui
-from ..panel import PanelInterface
+from game_view.game_menu.panel import PanelInterface
 
 
 class LeadPanel(PanelInterface):
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         self.box = gui.UIBoxLayout(vertical=True, space_between=20)
         title = gui.UILabel(
             text="LeaderBoard",
@@ -22,7 +22,7 @@ class LeadPanel(PanelInterface):
                         anchor_y="top",
                         align_y=-20)
 
-    def update_lead(self, data: dict[str, int]):
+    def update_lead(self, data: dict[str, int]) -> None:
         self.score_box.clear()
 
         sorted_score = sorted(
@@ -30,8 +30,8 @@ class LeadPanel(PanelInterface):
             key=lambda item: item[1],
             reverse=True
         )
-        top_5 = sorted_score[:30]
-        for index, (name, score) in enumerate(top_5):
+        top_sc = sorted_score[:30]
+        for index, (name, score) in enumerate(top_sc):
             max_score_length = 6
             score_str = str(score)
             if len(score_str) > max_score_length:
