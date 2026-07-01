@@ -5,7 +5,7 @@ from typing import List, Any
 
 
 class SettingView(arcade.View):
-    def __init__(self, last_view: Any, config_data: Any) -> None:
+    def __init__(self, last_view: arcade.View, config_data: Any) -> None:
         super().__init__()
         self.config_data = config_data
         self.last_view = last_view
@@ -21,7 +21,15 @@ class SettingView(arcade.View):
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
 
         self.font_size = 20
-
+        self.title_text = arcade.Text(
+            "Settings",
+            0, 0,
+            arcade.color.WHITE,
+            font_size=40,
+            font_name="Press Start 2P",
+            anchor_x="center",
+            anchor_y="center"
+        )
         self.menu_texts: List[arcade.Text] = []
         for option in self.menu_options:
             text_obj = arcade.Text(
@@ -45,6 +53,9 @@ class SettingView(arcade.View):
         center_x = self.window.width // 2
         start_y = int(self.window.height * 0.6)
 
+        self.title_text.x = center_x
+        self.title_text.y = self.window.height - 80
+
         self.menu_texts[0].text = f"Volume : < {self.volume}% >"
 
         cheat_state = "ON" if self.b_cheat else "OFF"
@@ -57,7 +68,7 @@ class SettingView(arcade.View):
     def on_draw(self) -> None:
         self.clear()
         self.update_position()
-
+        self.title_text.draw()
         center_x = self.window.width // 2
         for i, text_obj in enumerate(self.menu_texts):
             if i == self.selected_index:

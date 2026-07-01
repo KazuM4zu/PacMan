@@ -1,15 +1,14 @@
-from scoreboard_view.scoreboard import Scoreboard
 import arcade
 import arcade.gui as gui
-from typing import Any
+import arcade.color as col
+from typing import Any, Tuple, List
 
 
-class ScoreView(arcade.View):
-    def __init__(self, scoreboard: Scoreboard,
-                 last_view: arcade.View, config_data: Any) -> None:
+class InstrucView(arcade.View):
+    def __init__(self,
+                 last_view: Any, config_data: Any) -> None:
         super().__init__()
         self.last_view = last_view
-        self.sc = scoreboard
         self.manager = gui.UIManager()
         self.config = config_data
 
@@ -17,7 +16,7 @@ class ScoreView(arcade.View):
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
 
         self.title_text = arcade.Text(
-            "SCOREBOARD",
+            "Instructions",
             0, 0,
             arcade.color.WHITE,
             font_size=40,
@@ -26,8 +25,58 @@ class ScoreView(arcade.View):
             anchor_y="center"
         )
 
-        self.scores_txt: list = []
-        self.load_scoreboard()
+        self.instruction_content = (
+            "Welcome to Dark-Man!\n\n"
+            "OBJECTIVE:\n\n"
+            "Consume all pellets while avoiding ghosts.\n"
+            "Clear the board to advance.\n\n\n\n"
+            "CONTROLS:\n\n"
+            "Use Arrow Keys to navigate.\n\n\n\n"
+            "TIPS:\n"
+            "- Power Pellets turn ghosts blue (edible!).\n"
+            "- Collect Bonus Items in the center.\n"
+            "- Toggle cheats in the Settings menu.\n\n\n"
+            "NOTE: Non-blue ghosts are lethal!"
+        )
+
+        self.instru_txt: List[Tuple[str, Any]] = [
+            ("Welcome to Dark-Man!", col.YELLOW_ORANGE),
+            ("", col.WHITE),
+            ("", col.WHITE),
+            ("Objective:", col.RED_DEVIL),
+            ("", col.WHITE),
+            ("Consume all pac-gums while avoiding ghosts.", col.WHITE),
+            ("", col.WHITE),
+            ("", col.WHITE),
+            ("Clear the board to advance.", col.WHITE),
+            ("", col.WHITE),
+            ("", col.WHITE),
+            ("TIPS:", col.DARK_CERULEAN),
+            ("", col.WHITE),
+            ("- Super pac-gums turn ghosts blue (edible!).", col.WHITE),
+            ("", col.WHITE),
+            ("- Pay attention to the remaining time.", col.WHITE),
+            ("", col.WHITE),
+            ("", col.WHITE),
+            ("NOTE: You can enable cheat mode in the settings "
+             "(but that's cheating).", col.RED)
+        ]
+        self.lst_txt: List[arcade.Text] = []
+        for txt, color in self.instru_txt:
+            text_obj = arcade.Text(
+                text=txt,
+                x=0, y=0,
+                color=color,
+                font_name="Press Start 2P",
+                font_size=18,
+                anchor_x="center",
+                anchor_y="center",
+                multiline=True,
+                width=3000,
+                align="center"
+            )
+            self.lst_txt.append(text_obj)
+
         self.back_y_pos = 80
         self.back_txt = arcade.Text(
             text="BACK",
@@ -50,62 +99,15 @@ class ScoreView(arcade.View):
         self.back_txt.y = 80
 
         start_y = int(self.window.height * 0.68)
-        spacing = 40
-        for i, txt_obj in enumerate(self.scores_txt):
+        spacing = 15
+        for i, txt_obj in enumerate(self.lst_txt):
             txt_obj.x = center_x
             txt_obj.y = start_y - (i * spacing)
-
-    def load_scoreboard(self) -> None:
-        scores = self.sc.get_scores()
-
-        scores_tries = sorted(scores.items(),
-                              key=lambda item: item[1], reverse=True)
-
-        self.scores_txt = []
-
-        if not scores_tries:
-            txt = arcade.Text(
-                "NO SCORES YET",
-                0, 0,
-                arcade.color.WHITE,
-                font_name="Press Start 2P",
-                font_size=14,
-                anchor_x="center",
-                anchor_y="center"
-            )
-            self.scores_txt.append(txt)
-            return
-        for i, (name, score) in enumerate(scores_tries[:10]):
-            display_name = name.upper()
-            trunc = len(display_name) > 40
-            shown = display_name[:40]
-            txt_line = f"{i + 1}. {shown.ljust(14)}"
-            txt_line += f"{'...' if trunc else ''} {score}"
-            color = arcade.color.WHITE
-            if i == 0:
-                color = arcade.color.GOLD
-            elif i == 1:
-                color = arcade.color.SILVER
-            elif i == 2:
-                color = arcade.color.BRONZE
-
-            txt = arcade.Text(
-                text=txt_line,
-                x=0, y=0,
-                color=color,
-                font_name="Press Start 2P",
-                anchor_x="center",
-                anchor_y="center",
-                align="left"
-            )
-            self.scores_txt.append(txt)
 
     def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.EERIE_BLACK)
         self.manager.enable()
-        self.window.set_caption("DarkMan - Scoreboard")
-        self.scores_txt = []
-        self.load_scoreboard()
+        self.window.set_caption("DarkMan - Instructions")
 
     def on_hide_view(self) -> None:
         self.manager.disable()
@@ -114,9 +116,8 @@ class ScoreView(arcade.View):
         self.clear()
         self.update_position()
         self.title_text.draw()
-        for txt in self.scores_txt:
-            txt.draw()
-
+        for txt_obj in self.lst_txt:
+            txt_obj.draw()
         self.back_txt.draw()
 
         if self.back_selected:
@@ -159,8 +160,3 @@ class ScoreView(arcade.View):
 
     def execute_back(self) -> None:
         self.window.show_view(self.last_view)
-
-
-if __name__ == "__main__":
-    sc = Scoreboard()
-    sc.print_scoreboard()

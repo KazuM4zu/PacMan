@@ -44,7 +44,6 @@ class Map:
         self.pacgums_list: arcade.SpriteList = arcade.SpriteList()
         self.super_pacgums_list: arcade.SpriteList = arcade.SpriteList()
 
-        # Initialisation explicite pour mypy
         self.maze: List[List[int]] = []
         self.generator: Any = None
 

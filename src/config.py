@@ -33,7 +33,6 @@ def check_config_file(config_file: Any) -> Config:
         with open(config_file, "r", encoding="utf-8") as f:
             data_config = json.load(f)
         valid_function = Config(**data_config)
-        # print("The config file is valid and loaded")
         return valid_function
     except FileNotFoundError:
         raise FileNotFoundError(f"'{config_file}' file was not found")

@@ -9,6 +9,7 @@ from game_view.game_view import GameView
 from setting_view.settings import SettingView
 from scoreboard_view.scoreboard import Scoreboard
 from scoreboard_view.scoreview import ScoreView
+from menu_view.menu_instru import InstrucView
 
 from typing import Any, List, Optional, cast
 
@@ -26,6 +27,7 @@ class MenuView(arcade.View):
         self.selected_index: int = 0
         self.menu_options: List[str] = ["Play",
                                         "Scoreboards",
+                                        "Instructions",
                                         "Settings",
                                         "Exit"]
         self.menu_spacing: int = 45
@@ -173,6 +175,10 @@ class MenuView(arcade.View):
         elif selected == "Scoreboards":
             score_view = ScoreView(Scoreboard(), self, self.config_data)
             self.window.show_view(score_view)
+
+        elif selected == "Instructions":
+            inst_view = InstrucView(self, self.config_data)
+            self.window.show_view(inst_view)
 
     def on_mouse_motion(self,
                         x: float,
