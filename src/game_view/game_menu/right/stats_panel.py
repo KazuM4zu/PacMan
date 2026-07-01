@@ -5,7 +5,14 @@ from game_view.game_menu.panel import PanelInterface
 
 
 class StatPanel(PanelInterface):
+    """Show the player's score, lives, level, and remaining time."""
+
     def setup_ui(self) -> None:
+        """Create the statistics labels and place them in the layout.
+
+        Returns:
+            None
+        """
         self.start_time: float = GLOBAL_CLOCK.time
         box = gui.UIBoxLayout(vertical=True, space_between=20)
 
@@ -52,10 +59,20 @@ class StatPanel(PanelInterface):
         )
 
     def update_label(self) -> None:
+        """Refresh the score and life information shown in the panel.
+
+        Returns:
+            None
+        """
         self.score_label.text = f"Score: {self.player.score:04d}"
         self.live_label.text = f"Lifes: {self.player.lives}"
 
     def update_timer(self) -> None:
+        """Refresh the displayed countdown timer.
+
+        Returns:
+            None
+        """
         elaps = GLOBAL_CLOCK.time_since(self.start_time)
 
         time_remaining = self.config_data.lvl_max_time - elaps
@@ -64,7 +81,17 @@ class StatPanel(PanelInterface):
         self.timer_label.text = f"Timer: {sec}:{ms:02d}"
 
     def get_time_in_sc(self) -> int:
+        """Return the elapsed time since the statistics panel started.
+
+        Returns:
+            Elapsed seconds as an integer.
+        """
         return int(GLOBAL_CLOCK.time_since(self.start_time))
 
     def restart_time(self) -> None:
+        """Reset the panel timer to the current clock value.
+
+        Returns:
+            None
+        """
         self.start_time = GLOBAL_CLOCK.time

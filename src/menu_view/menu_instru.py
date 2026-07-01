@@ -5,8 +5,16 @@ from typing import Any, Tuple, List
 
 
 class InstrucView(arcade.View):
+    """Show the game's instructions and a back option."""
+
     def __init__(self,
                  last_view: Any, config_data: Any) -> None:
+        """Initialize the instructions screen and its UI text.
+
+        Args:
+            last_view: The view to return to when the user goes back.
+            config_data: Configuration data for the current game session.
+        """
         super().__init__()
         self.last_view = last_view
         self.manager = gui.UIManager()
@@ -90,6 +98,11 @@ class InstrucView(arcade.View):
         self.back_selected = False
 
     def update_position(self) -> None:
+        """Position all instruction texts relative to the current window size.
+
+        Returns:
+            None
+        """
         center_x = self.window.width // 2
 
         self.title_text.x = center_x
@@ -105,14 +118,29 @@ class InstrucView(arcade.View):
             txt_obj.y = start_y - (i * spacing)
 
     def on_show_view(self) -> None:
+        """Prepare the view when it becomes active.
+
+        Returns:
+            None
+        """
         arcade.set_background_color(arcade.color.EERIE_BLACK)
         self.manager.enable()
         self.window.set_caption("DarkMan - Instructions")
 
     def on_hide_view(self) -> None:
+        """Disable the UI manager when the view is hidden.
+
+        Returns:
+            None
+        """
         self.manager.disable()
 
     def on_draw(self) -> None:
+        """Draw the instructions screen and selection marker.
+
+        Returns:
+            None
+        """
         self.clear()
         self.update_position()
         self.title_text.draw()
@@ -133,6 +161,12 @@ class InstrucView(arcade.View):
             )
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
+        """Handle keyboard input for selecting the back option.
+
+        Args:
+            symbol: Key code that was pressed.
+            modifiers: Keyboard modifiers active during the press.
+        """
         if symbol in (arcade.key.UP, arcade.key.DOWN):
             self.back_selected = True
         elif (symbol == (arcade.key.SPACE)
@@ -141,6 +175,14 @@ class InstrucView(arcade.View):
 
     def on_mouse_motion(self, x: float, y: float,
                         dx: float, dy: float) -> None:
+        """Update selection state based on mouse position.
+
+        Args:
+            x: Mouse x position.
+            y: Mouse y position.
+            dx: Horizontal mouse movement.
+            dy: Vertical mouse movement.
+        """
         center_x = self.window.width // 2
         hitbox_w = 150
         hitbox_h = 35
@@ -155,8 +197,21 @@ class InstrucView(arcade.View):
     def on_mouse_press(self,
                        x: float, y: float,
                        button: int, modifiers: int) -> None:
+        """Trigger the back action when the user clicks the button.
+
+        Args:
+            x: Mouse x position.
+            y: Mouse y position.
+            button: Mouse button identifier.
+            modifiers: Keyboard modifiers active during the click.
+        """
         if button == arcade.MOUSE_BUTTON_LEFT and self.back_selected:
             self.execute_back()
 
     def execute_back(self) -> None:
+        """Return to the previous view.
+
+        Returns:
+            None
+        """
         self.window.show_view(self.last_view)

@@ -6,6 +6,8 @@ from scoreboard_view.scoreview import ScoreView
 
 
 class EndView(arcade.View):
+    """Display the game result, allow score saving, and navigate back to menu."""
+
     def __init__(
         self,
         main_menu_view: Any,
@@ -15,6 +17,16 @@ class EndView(arcade.View):
         defeat: bool = True,
         time_elap: bool = False
     ) -> None:
+        """Initialize the end view and build its UI.
+
+        Args:
+            main_menu_view: Reference to the main menu view.
+            config_data: Configuration data for the game.
+            player: Player instance containing the final score.
+            scoreboard: Scoreboard used to save the score.
+            defeat: Whether the player lost the game.
+            time_elap: Whether the game ended because the timer expired.
+        """
         super().__init__()
         arcade.set_background_color(arcade.color.EERIE_BLACK)
 
@@ -147,10 +159,23 @@ class EndView(arcade.View):
         self.manager.add(anchor)
 
     def on_draw(self) -> None:
+        """Draw the end view UI to the screen.
+
+        Returns:
+            None
+        """
         self.clear()
         self.manager.draw()
 
     def on_exit(self, event: gui.UIOnClickEvent) -> None:
+        """Return to the main menu and stop end-view music.
+
+        Args:
+            event: The click event for the exit button.
+
+        Returns:
+            None
+        """
         if self.music and self.music_player:
             self.music.stop(player=self.music_player)
         from menu_view.menu_view import MenuView
@@ -158,9 +183,25 @@ class EndView(arcade.View):
         self.window.show_view(mv)
 
     def is_alnum_space(self, s: str) -> bool:
+        """Check whether a string contains only letters, numbers, or spaces.
+
+        Args:
+            s: The string to validate.
+
+        Returns:
+            True if the string contains only alphanumeric characters and spaces.
+        """
         return all(c.isalpha() or c.isspace() or c.isnumeric() for c in s)
 
     def on_save(self, event: gui.UIOnClickEvent) -> None:
+        """Validate the username and save the score if it is valid.
+
+        Args:
+            event: The click event for the save button.
+
+        Returns:
+            None
+        """
         username_str: str = self.username.text.strip()
         if username_str == "":
             self.error_msg.text = "The username cannot be empty !"
@@ -180,7 +221,17 @@ class EndView(arcade.View):
             self.window.show_view(self.scoreboard_view)
 
     def on_show_view(self) -> None:
+        """Enable the UI manager when the view becomes active.
+
+        Returns:
+            None
+        """
         self.manager.enable()
 
     def on_hide_view(self) -> None:
+        """Disable the UI manager when the view is no longer active.
+
+        Returns:
+            None
+        """
         self.manager.disable()

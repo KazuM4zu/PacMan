@@ -4,7 +4,14 @@ from game_view.game_menu.panel import PanelInterface
 
 
 class LeadPanel(PanelInterface):
+    """Render a leaderboard with the highest scores."""
+
     def setup_ui(self) -> None:
+        """Create the leaderboard title and score container.
+
+        Returns:
+            None
+        """
         self.box = gui.UIBoxLayout(vertical=True, space_between=20)
         title = gui.UILabel(
             text="LeaderBoard",
@@ -23,6 +30,14 @@ class LeadPanel(PanelInterface):
                         align_y=-20)
 
     def update_lead(self, data: dict[str, int]) -> None:
+        """Refresh the leaderboard with the latest scores.
+
+        Args:
+            data: Mapping of player names to their score values.
+
+        Returns:
+            None
+        """
         self.score_box.clear()
 
         sorted_score = sorted(

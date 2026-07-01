@@ -15,10 +15,17 @@ from typing import Any, List, Optional, cast
 
 
 class MenuView(arcade.View):
+    """Display the main menu and handle navigation to game features."""
+
     _fire_anim = None
     _elmo_anim = None
 
     def __init__(self, config_data: Any) -> None:
+        """Initialize the main menu view and its UI assets.
+
+        Args:
+            config_data: Configuration data used by the menu and child views.
+        """
         super().__init__()
         self.config_data: Any = config_data
 
@@ -81,6 +88,11 @@ class MenuView(arcade.View):
         self.elmo = pyglet.sprite.Sprite(MenuView._elmo_anim)
 
     def on_show_view(self) -> None:
+        """Prepare the menu view when it becomes active.
+
+        Returns:
+            None
+        """
         arcade.set_background_color(arcade.color.EERIE_BLACK)
         self.manager.enable()
         self.window.set_caption("Pacman - Menu")
@@ -95,9 +107,19 @@ class MenuView(arcade.View):
             self.title_logo.center_y = self.window.height - 250
 
     def on_hide_view(self) -> None:
+        """Disable the UI manager when the menu is hidden.
+
+        Returns:
+            None
+        """
         self.manager.disable()
 
     def update_position(self) -> None:
+        """Position the menu text and decorative sprites for the current window size.
+
+        Returns:
+            None
+        """
         center_x: int = self.window.width // 2
         start_y: int = int(self.window.height * 0.6)
         cast_sprite = cast(Any, self.title_logo)
@@ -115,6 +137,11 @@ class MenuView(arcade.View):
         self.elmo.y = self.title_logo.top - 20
 
     def on_draw(self) -> None:
+        """Draw the main menu background, title, options, and decorations.
+
+        Returns:
+            None
+        """
         self.clear()
         self.update_position()
         arcade.draw_texture_rect(
@@ -147,6 +174,12 @@ class MenuView(arcade.View):
         self.manager.draw()
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
+        """Handle keyboard navigation and menu activation.
+
+        Args:
+            symbol: Key code that was pressed.
+            modifiers: Keyboard modifiers active during the press.
+        """
         if symbol == arcade.key.UP:
             self.selected_index = ((self.selected_index - 1)
                                    % len(self.menu_options))
@@ -157,6 +190,11 @@ class MenuView(arcade.View):
             self.execute_action()
 
     def execute_action(self) -> None:
+        """Execute the action associated with the currently selected menu item.
+
+        Returns:
+            None
+        """
         selected: str = self.menu_options[self.selected_index]
 
         if selected == "Play":
@@ -185,6 +223,14 @@ class MenuView(arcade.View):
                         y: float,
                         dx: float,
                         dy: float) -> None:
+        """Update the selected menu item when the mouse moves over it.
+
+        Args:
+            x: Mouse x position.
+            y: Mouse y position.
+            dx: Horizontal mouse movement.
+            dy: Vertical mouse movement.
+        """
         center_x: int = self.window.width // 2
         start_y: int = int(self.window.height * 0.6)
         for i in range(len(self.menu_options)):
@@ -204,6 +250,14 @@ class MenuView(arcade.View):
 
     def on_mouse_press(self, x: float, y: float,
                        button: int, modifiers: int) -> None:
+        """Activate the selected menu item when the user clicks it.
+
+        Args:
+            x: Mouse x position.
+            y: Mouse y position.
+            button: Mouse button identifier.
+            modifiers: Keyboard modifiers active during the click.
+        """
         if button == arcade.MOUSE_BUTTON_LEFT:
             start_y: int = int(self.window.height * 0.6)
             item_y: int = start_y - (

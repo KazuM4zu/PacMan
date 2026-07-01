@@ -5,7 +5,15 @@ from typing import List, Any
 
 
 class SettingView(arcade.View):
+    """Display and update the settings menu options."""
+
     def __init__(self, last_view: arcade.View, config_data: Any) -> None:
+        """Initialize the settings view and load its UI state.
+
+        Args:
+            last_view: The view to return to when leaving settings.
+            config_data: Configuration object storing current settings.
+        """
         super().__init__()
         self.config_data = config_data
         self.last_view = last_view
@@ -45,11 +53,20 @@ class SettingView(arcade.View):
             self.menu_texts.append(text_obj)
 
     def on_show_view(self) -> None:
+        """Prepare the settings view when it becomes active.
+
+        Returns:
+            None
+        """
         arcade.set_background_color(arcade.color.EERIE_BLACK)
         self.window.set_caption("Pacman - Settings")
 
     def update_position(self) -> None:
+        """Update widget positions based on the current window size.
 
+        Returns:
+            None
+        """
         center_x = self.window.width // 2
         start_y = int(self.window.height * 0.6)
 
@@ -66,6 +83,11 @@ class SettingView(arcade.View):
             text_obj.y = start_y - (i * self.menu_spacing)
 
     def on_draw(self) -> None:
+        """Draw the settings screen and currently selected option.
+
+        Returns:
+            None
+        """
         self.clear()
         self.update_position()
         self.title_text.draw()
@@ -91,6 +113,12 @@ class SettingView(arcade.View):
                 )
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
+        """Handle keyboard input for changing settings.
+
+        Args:
+            symbol: Key code that was pressed.
+            modifiers: Keyboard modifiers active during the press.
+        """
         if symbol == arcade.key.UP:
             self.selected_index = ((self.selected_index - 1) %
                                    len(self.menu_options))
@@ -113,6 +141,11 @@ class SettingView(arcade.View):
             self.execute_action()
 
     def on_update(self, delta_time: float) -> None:
+        """Persist the current settings to the configuration file when needed.
+
+        Args:
+            delta_time: Time elapsed since the previous frame.
+        """
         if (self.config_data.volume != self.volume or
            self.b_cheat != self.config_data.cheats_enabled):
             self.config_data.volume = self.volume
@@ -123,10 +156,20 @@ class SettingView(arcade.View):
                 print("Could not save config:", e)
 
     def apply_volume(self) -> None:
+        """Update the volume of the previous view's music player if available.
+
+        Returns:
+            None
+        """
         if hasattr(self.last_view, "music_player"):
             self.last_view.music_player.volume = self.volume / 100
 
     def execute_action(self) -> None:
+        """Toggle the selected option or return to the previous view.
+
+        Returns:
+            None
+        """
         if self.selected_index == 1:
             self.b_cheat = not self.b_cheat
         elif self.selected_index == 2:
@@ -134,6 +177,14 @@ class SettingView(arcade.View):
 
     def on_mouse_motion(self, x: float, y: float,
                         dx: float, dy: float) -> None:
+        """Update the selected setting when the mouse moves over it.
+
+        Args:
+            x: Mouse x position.
+            y: Mouse y position.
+            dx: Horizontal mouse movement.
+            dy: Vertical mouse movement.
+        """
         center_x = self.window.width // 2
         start_y = int(self.window.height * 0.6)
 
@@ -155,6 +206,14 @@ class SettingView(arcade.View):
 
     def on_mouse_press(self, x: float, y: float,
                        button: int, modifiers: int) -> None:
+        """Apply the clicked setting action.
+
+        Args:
+            x: Mouse x position.
+            y: Mouse y position.
+            button: Mouse button identifier.
+            modifiers: Keyboard modifiers active during the click.
+        """
         if button == arcade.MOUSE_BUTTON_LEFT:
             center_x = self.window.width // 2
             start_y = int(self.window.height * 0.6)

@@ -1,3 +1,5 @@
+"""Scoreboard view for displaying saved high scores."""
+
 from scoreboard_view.scoreboard import Scoreboard
 import arcade
 import arcade.gui as gui
@@ -5,8 +7,17 @@ from typing import Any
 
 
 class ScoreView(arcade.View):
+    """Show the current leaderboard and let the user return to the previous view."""
+
     def __init__(self, scoreboard: Scoreboard,
                  last_view: arcade.View, config_data: Any) -> None:
+        """Initialize the scoreboard view and load its UI content.
+
+        Args:
+            scoreboard: Scoreboard instance containing saved scores.
+            last_view: The view to return to when the back action is triggered.
+            config_data: Configuration data for the current session.
+        """
         super().__init__()
         self.last_view = last_view
         self.sc = scoreboard
@@ -41,6 +52,11 @@ class ScoreView(arcade.View):
         self.back_selected = False
 
     def update_position(self) -> None:
+        """Position the title, back label, and score entries for the current window size.
+
+        Returns:
+            None
+        """
         center_x = self.window.width // 2
 
         self.title_text.x = center_x
@@ -56,6 +72,11 @@ class ScoreView(arcade.View):
             txt_obj.y = start_y - (i * spacing)
 
     def load_scoreboard(self) -> None:
+        """Populate the visible score text objects from the scoreboard data.
+
+        Returns:
+            None
+        """
         scores = self.sc.get_scores()
 
         scores_tries = sorted(scores.items(),
@@ -101,6 +122,11 @@ class ScoreView(arcade.View):
             self.scores_txt.append(txt)
 
     def on_show_view(self) -> None:
+        """Refresh the scoreboard content when the view becomes active.
+
+        Returns:
+            None
+        """
         arcade.set_background_color(arcade.color.EERIE_BLACK)
         self.manager.enable()
         self.window.set_caption("DarkMan - Scoreboard")
@@ -108,9 +134,19 @@ class ScoreView(arcade.View):
         self.load_scoreboard()
 
     def on_hide_view(self) -> None:
+        """Disable the UI manager when the view is hidden.
+
+        Returns:
+            None
+        """
         self.manager.disable()
 
     def on_draw(self) -> None:
+        """Draw the scoreboard view and selection marker.
+
+        Returns:
+            None
+        """
         self.clear()
         self.update_position()
         self.title_text.draw()
@@ -132,6 +168,12 @@ class ScoreView(arcade.View):
             )
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
+        """Handle keyboard input for returning to the previous view.
+
+        Args:
+            symbol: Key code that was pressed.
+            modifiers: Keyboard modifiers active during the press.
+        """
         if symbol in (arcade.key.UP, arcade.key.DOWN):
             self.back_selected = True
         elif (symbol == (arcade.key.SPACE)
@@ -140,6 +182,14 @@ class ScoreView(arcade.View):
 
     def on_mouse_motion(self, x: float, y: float,
                         dx: float, dy: float) -> None:
+        """Update selection based on the mouse position over the back button.
+
+        Args:
+            x: Mouse x position.
+            y: Mouse y position.
+            dx: Horizontal mouse movement.
+            dy: Vertical mouse movement.
+        """
         center_x = self.window.width // 2
         hitbox_w = 150
         hitbox_h = 35
@@ -154,8 +204,21 @@ class ScoreView(arcade.View):
     def on_mouse_press(self,
                        x: float, y: float,
                        button: int, modifiers: int) -> None:
+        """Return to the previous view when the back button is clicked.
+
+        Args:
+            x: Mouse x position.
+            y: Mouse y position.
+            button: Mouse button identifier.
+            modifiers: Keyboard modifiers active during the click.
+        """
         if button == arcade.MOUSE_BUTTON_LEFT and self.back_selected:
             self.execute_back()
 
     def execute_back(self) -> None:
+        """Return to the previous view.
+
+        Returns:
+            None
+        """
         self.window.show_view(self.last_view)

@@ -6,6 +6,7 @@ from menu_view.menu_view import MenuView
 from config import check_config_file
 
 if __name__ == "__main__":
+    """Load configuration, create the game window, and start the main menu."""
     config_file = "config.json"
 
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):

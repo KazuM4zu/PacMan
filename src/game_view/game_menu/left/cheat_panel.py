@@ -10,10 +10,20 @@ L_FREE = "Press 'f' to freeze the minotaurs"
 
 
 class CheatPanel(PanelInterface):
+    """Display cheat options and handle related keyboard shortcuts."""
+
     def __init__(self, width: int,
                  height: int,
                  player: Any,
                  view: Any) -> None:
+        """Initialize the cheat panel with its menu options and state.
+
+        Args:
+            width: Width of the panel in pixels.
+            height: Height of the panel in pixels.
+            player: Player instance used by cheat actions.
+            view: Parent game view that owns the panel.
+        """
         self.menu_options: List[str] = [
             L_INVI,
             L_FREE,
@@ -31,6 +41,11 @@ class CheatPanel(PanelInterface):
         super().__init__(width, height, player)
 
     def setup_ui(self) -> None:
+        """Create the cheat menu box layout and populate it.
+
+        Returns:
+            None
+        """
         self.box = gui.UIBoxLayout(vertical=True, space_between=25)
         self.layout.add(child=self.box,
                         anchor_x="center_x",
@@ -38,6 +53,11 @@ class CheatPanel(PanelInterface):
         self.update_labels()
 
     def update_labels(self) -> None:
+        """Refresh the visible cheat labels and their colors.
+
+        Returns:
+            None
+        """
         self.box.clear()
         for i, option in enumerate(self.menu_options):
             color = arcade.color.WHITE
@@ -59,6 +79,15 @@ class CheatPanel(PanelInterface):
             self.box.add(label)
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
+        """Handle key presses for cheat actions.
+
+        Args:
+            symbol: Key code that was pressed.
+            modifiers: Any keyboard modifiers active during the press.
+
+        Returns:
+            None
+        """
         if symbol == arcade.key.I:
             ch.set_invicible(self.player)
         elif symbol == arcade.key.F:
