@@ -1,5 +1,3 @@
-"""Scoreboard view for displaying saved high scores."""
-
 from scoreboard_view.scoreboard import Scoreboard
 import arcade
 import arcade.gui as gui

@@ -1,5 +1,3 @@
-"""Persistent scoreboard storage and validation utilities."""
-
 import json
 import os
 from pathlib import Path
