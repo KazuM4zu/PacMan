@@ -7,7 +7,42 @@ import arcade
 
 
 class Blinky:
+    """Represents the Blinky ghost in the Pac-Man game.
+
+    Blinky chases the player directly by computing the shortest path
+    to the player's position using a breadth-first search (BFS) of
+    the maze. When the player is in "super" mode (``super_mod``),
+    Blinky instead flees from the player, heading toward the
+    farthest reachable cell.
+
+    Attributes:
+        manager (Any): The GhostManager instance that owns all ghosts.
+        map (Any): The current level map (grid, cells, walls, etc.).
+        player (Any): The player instance being chased or fled from.
+        cell_pos (List[int]): Ghost position in grid-cell coordinates ``[x, y]``.
+        pos (List[float]): Ghost position in pixel coordinates ``[x, y]``.
+        dir (Tuple[int, int]): Current movement direction ``(dx, dy)``.
+        dx (int): Horizontal component of the current direction.
+        dy (int): Vertical component of the current direction.
+        speed (int): Movement speed in pixels per frame.
+        visible (bool): Whether the ghost is currently visible (``False``
+            while respawning after being eaten).
+        normal_texture (arcade.Texture): Texture used in normal state.
+        eat_texture (arcade.Texture): Texture used when the ghost is
+            edible (player in super mode).
+        sprite_size (float): On-screen size of the ghost sprite.
+    """
+
     def __init__(self, manager: Any) -> None:
+        """Initialize the Blinky ghost.
+
+        Args:
+            manager (Any): The GhostManager instance, used to access
+                the game map and the player.
+
+        Returns:
+            None
+        """
         self.manager = manager
         self.map = self.manager.map
         self.player = self.manager.player
@@ -29,11 +64,27 @@ class Blinky:
         self.sprite_size: float = self.map.cell * 0.8
 
     def init_pos(self) -> None:
+        """Reset the ghost to its starting position (cell ``[0, 0]``).
+
+        Returns:
+            None
+        """
         self.cell_pos = [0, 0]
         x, y = self.cell_pos
         self.pos = list(self.map.grid[y][x])
 
     def algo(self) -> Tuple[int, int]:
+        """Compute the best direction to move toward the player.
+
+        Performs a breadth-first search (BFS) from the ghost's current
+        cell to the player's cell, avoiding walls, and returns the
+        very first direction taken along the shortest path found.
+
+        Returns:
+            Tuple[int, int]: The direction ``(dx, dy)`` to move in.
+            Falls back to the ghost's current direction if no path
+            to the player is found.
+        """
         N = (0, -1)
         S = (0, 1)
         E = (1, 0)
@@ -72,6 +123,18 @@ class Blinky:
         return self.dir
 
     def have_wall(self, pos: List[int], direction: Tuple[int, int]) -> bool:
+        """Check whether a wall blocks movement in a given direction.
+
+        Args:
+            pos (List[int]): Grid-cell position ``[x, y]`` from which
+                the move is being tested.
+            direction (Tuple[int, int]): Direction to test, as a
+                ``(dx, dy)`` tuple (north, south, east, or west).
+
+        Returns:
+            bool: ``True`` if a wall blocks movement in that direction
+            from that position, ``False`` otherwise.
+        """
         N = (0, -1)
         S = (0, 1)
         E = (1, 0)
@@ -95,6 +158,15 @@ class Blinky:
         return False
 
     def draw(self) -> None:
+        """Draw the ghost sprite at its current position.
+
+        Selects the edible texture when the player is in super mode
+        or when the ghost is temporarily invisible; otherwise uses
+        the normal texture.
+
+        Returns:
+            None
+        """
         texture = (self.eat_texture
                    if self.player.super_mod or
                    not self.visible else self.normal_texture)
@@ -111,6 +183,20 @@ class Blinky:
         arcade.draw_texture_rect(texture, rect)
 
     def update(self) -> None:
+        """Update the ghost's position, direction, and state each frame.
+
+        Does nothing if the ghost is not visible. Otherwise, while the
+        player is not frozen, moves the ghost cell by cell toward its
+        target using the chase algorithm (``algo``) or the flee
+        algorithm (``flight``), depending on the player's state.
+        Also detects collisions with the player: kills the player if
+        they are neither invincible nor in super mode, or triggers
+        this ghost's own "death" (see ``death``) if the player is in
+        super mode.
+
+        Returns:
+            None
+        """
         if not self.visible:
             return
 
@@ -151,6 +237,16 @@ class Blinky:
                 self.death()
 
     def death(self) -> None:
+        """Handle the ghost being eaten by the player.
+
+        Makes the ghost invisible, awards points to the player, and
+        starts a background thread that resets the ghost to its
+        initial position and makes it visible again after a 3-second
+        delay.
+
+        Returns:
+            None
+        """
         self.visible = False
         self.player.score += self.player.config_data.pt_per_ghost
 
@@ -162,6 +258,17 @@ class Blinky:
         threading.Thread(target=reset).start()
 
     def flight(self) -> Tuple[int, int]:
+        """Compute the best direction to flee from the player.
+
+        Explores reachable cells from the ghost's position via BFS
+        and returns the first direction leading toward the farthest
+        reachable cell from the player (Manhattan distance). Used
+        when the player is in super mode.
+
+        Returns:
+            Tuple[int, int]: The direction ``(dx, dy)`` that moves the
+            ghost as far away from the player as possible.
+        """
         N = (0, -1)
         S = (0, 1)
         E = (1, 0)

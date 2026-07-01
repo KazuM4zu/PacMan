@@ -16,7 +16,53 @@ from typing import Any, Optional
 
 
 class GameView(arcade.View):
+    """Main gameplay view, orchestrating the map, player, ghosts, and UI.
+
+    Owns the game loop logic: level generation and progression,
+    drawing the map/player/ghosts/UI, handling player input, pausing,
+    background music, and transitioning to the end view on victory,
+    defeat, or timeout.
+
+    Attributes:
+        main_menu_view (arcade.View): The main menu view to return to.
+        config_data (Any): Global game configuration.
+        sc (Scoreboard): The scoreboard used to record and read scores.
+        index_level (int): Index of the level currently being played.
+        first_game (bool): Whether this is the first game played in
+            this session.
+        manager (gui.UIManager): The arcade GUI manager for on-screen
+            widgets.
+        escape_menu (Optional[Any]): Reserved reference to the escape
+            menu widget.
+        settings_menu (Optional[Any]): Reserved reference to the
+            settings menu widget.
+        is_paused (bool): Whether the game is currently paused.
+        stat_panel (Optional[StatPanel]): The panel displaying player
+            stats (score, time, etc.).
+        map (Optional[Map]): The current level's map.
+        player (Optional[Player]): The player instance.
+        music (Optional[arcade.Sound]): Background music, if loaded.
+        music_player (Optional[Any]): Handle to the playing music
+            instance, used to stop playback.
+        ghost_manager (GhostManager): Manages all ghosts in the level.
+    """
+
     def __init__(self, main_menu_view: arcade.View, config_data: Any) -> None:
+        """Initialize the game view, load the first level, and start music.
+
+        Sets up the scoreboard, UI manager, and state flags; attempts
+        to load and loop the background music; generates the first
+        level and its ghosts; builds the UI panels; and loads the
+        game's custom fonts.
+
+        Args:
+            main_menu_view (arcade.View): The main menu view to return
+                to (e.g., after the game ends).
+            config_data (Any): Global game configuration.
+
+        Returns:
+            None
+        """
         super().__init__()
 
         self.main_menu_view = main_menu_view
@@ -59,6 +105,16 @@ class GameView(arcade.View):
         arcade.load_font("assets/font/PressStart2P-Regular.ttf")
 
     def setup_ui(self) -> None:
+        """Build and register the game's UI panels and layouts.
+
+        Creates the top "cheats enabled" label, the left-side escape
+        and cheat panels (added to the UI only while paused), and the
+        right-side stats and leaderboard panels, then registers them
+        with the UI manager.
+
+        Returns:
+            None
+        """
         panel_width: int = (self.window.width // 4) - 10
         self.top_anchor = gui.UIAnchorLayout()
         txt: str = ""
@@ -125,6 +181,18 @@ class GameView(arcade.View):
         self.manager.add(anchor_right)
 
     def generate_level(self) -> None:
+        """Advance to the next level, or show the end view if none remain.
+
+        If all configured levels have been completed, switches to the
+        victory ``EndView``. Otherwise, builds a new ``Map`` for the
+        next level, creates the player on the first level or
+        repositions the existing player and resets the ghosts on
+        subsequent levels, increments ``index_level``, and restarts
+        the stats panel's timer.
+
+        Returns:
+            None
+        """
         if self.index_level == len(self.config_data.level):
             win = EndView(self.main_menu_view,
                           self.config_data,
@@ -151,6 +219,16 @@ class GameView(arcade.View):
             self.stat_panel.restart_time()
 
     def on_draw(self) -> None:
+        """Render the current frame: map, player, ghosts, and UI.
+
+        Clears the screen, draws the map, player, UI manager
+        contents, and ghosts (in that order), draws the pause overlay
+        triangle when paused, sets the window caption, and sets the
+        background color.
+
+        Returns:
+            None
+        """
         self.clear()
         if self.map:
             self.map.draw()
@@ -164,6 +242,16 @@ class GameView(arcade.View):
         arcade.set_background_color(arcade.color.BLACK)
 
     def pause_game(self) -> None:
+        """Toggle the paused state and show or hide the pause menu.
+
+        When pausing, rebuilds the left-side box layout with the
+        escape panel (and cheat panel, if enabled) and adds it to the
+        UI manager. When resuming, removes that layout from the UI
+        manager.
+
+        Returns:
+            None
+        """
         self.is_paused = not self.is_paused
         if self.is_paused:
             self.left_box.clear()
@@ -175,6 +263,22 @@ class GameView(arcade.View):
             self.manager.remove(self.left_anchor)
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
+        """Handle keyboard input for gameplay, pausing, and debug shortcuts.
+
+        Forwards key presses to the cheat panel (if cheats are
+        enabled) and to the player. Toggles pause on ``ESCAPE``,
+        triggers an instant win on ``F1``, and an instant loss on
+        ``F2`` (debug shortcuts). Forwards key presses to the escape
+        panel while paused.
+
+        Args:
+            symbol (int): The arcade key code that was pressed.
+            modifiers (int): Bitwise combination of active modifier
+                keys.
+
+        Returns:
+            None
+        """
         if self.config_data.cheats_enabled:
             self.panel_cheat.on_key_press(symbol, modifiers)
         if self.player:
@@ -196,14 +300,44 @@ class GameView(arcade.View):
             self.panel_echap.on_key_press(symbol, modifiers)
 
     def on_show_view(self) -> None:
+        """Enable the UI manager when this view becomes active.
+
+        Returns:
+            None
+        """
         self.manager.enable()
 
     def on_hide_view(self) -> None:
+        """Stop the background music and disable the UI manager.
+
+        Called when this view is no longer active (e.g., switching to
+        another view).
+
+        Returns:
+            None
+        """
         if self.music and self.music_player:
             self.music.stop(player=self.music_player)
         self.manager.disable()
 
     def on_update(self, delta_time: float) -> None:
+        """Advance the game state by one frame.
+
+        While paused, only updates the escape panel's labels. While
+        running, updates the player and ghosts, checks for the
+        player's remaining lives (showing the defeat ``EndView`` if
+        zero), updates the stats panel and checks for the level time
+        limit (showing a time-out defeat ``EndView`` if reached),
+        refreshes the cheat label, and advances to the next level
+        when all pac-gums have been collected.
+
+        Args:
+            delta_time (float): Time elapsed, in seconds, since the
+                last update call.
+
+        Returns:
+            None
+        """
         if self.is_paused:
             self.panel_echap.update_labels()
             return
