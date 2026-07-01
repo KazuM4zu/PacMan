@@ -8,6 +8,7 @@ dependencies = [
     "arcade>=3.3.3",
     "mazegenerator",
     "pydantic>=2.13.4",
+    "pyinstaller>=6.21.0",
 ]
 
 [tool.uv.sources]

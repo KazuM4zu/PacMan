@@ -111,32 +111,34 @@ class Blinky:
         arcade.draw_texture_rect(texture, rect)
 
     def update(self) -> None:
-        if not self.visible or self.player.freeze:
+        if not self.visible:
             return
-        target = list(self.map.grid[self.cell_pos[1]][self.cell_pos[0]])
 
-        if self.pos == target:
-            if self.player.super_mod:
-                new_dir = self.flight()
-            else:
-                new_dir = self.algo()
-            if new_dir:
-                self.dir = new_dir
-                self.dx, self.dy = self.dir
-            if not self.have_wall(self.cell_pos, self.dir):
-                self.cell_pos[0] += self.dx
-                self.cell_pos[1] += self.dy
+        if not self.player.freeze:
+            target = list(self.map.grid[self.cell_pos[1]][self.cell_pos[0]])
 
-        target = list(self.map.grid[self.cell_pos[1]][self.cell_pos[0]])
+            if self.pos == target:
+                if self.player.super_mod:
+                    new_dir = self.flight()
+                else:
+                    new_dir = self.algo()
+                if new_dir:
+                    self.dir = new_dir
+                    self.dx, self.dy = self.dir
+                if not self.have_wall(self.cell_pos, self.dir):
+                    self.cell_pos[0] += self.dx
+                    self.cell_pos[1] += self.dy
 
-        if self.pos[0] < target[0]:
-            self.pos[0] = min(self.pos[0] + self.speed, target[0])
-        elif self.pos[0] > target[0]:
-            self.pos[0] = max(self.pos[0] - self.speed, target[0])
-        if self.pos[1] < target[1]:
-            self.pos[1] = min(self.pos[1] + self.speed, target[1])
-        elif self.pos[1] > target[1]:
-            self.pos[1] = max(self.pos[1] - self.speed, target[1])
+            target = list(self.map.grid[self.cell_pos[1]][self.cell_pos[0]])
+
+            if self.pos[0] < target[0]:
+                self.pos[0] = min(self.pos[0] + self.speed, target[0])
+            elif self.pos[0] > target[0]:
+                self.pos[0] = max(self.pos[0] - self.speed, target[0])
+            if self.pos[1] < target[1]:
+                self.pos[1] = min(self.pos[1] + self.speed, target[1])
+            elif self.pos[1] > target[1]:
+                self.pos[1] = max(self.pos[1] - self.speed, target[1])
 
         radius = self.map.cell // 3 - 2
         if (

@@ -159,8 +159,3 @@ class ScoreView(arcade.View):
 
     def execute_back(self) -> None:
         self.window.show_view(self.last_view)
-
-
-if __name__ == "__main__":
-    sc = Scoreboard()
-    sc.print_scoreboard()

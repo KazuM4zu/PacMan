@@ -60,13 +60,9 @@ class CheatPanel(PanelInterface):
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         if symbol == arcade.key.I:
-            if not self.b_invicible:
-                ch.set_invicible(self.player)
-            self.b_invicible = not self.b_invicible
+            ch.set_invicible(self.player)
         elif symbol == arcade.key.F:
-            if not self.b_freeze:
-                ch.freeze_minotaurs(self.player)
-            self.b_freeze = not self.b_freeze
+            ch.freeze_minotaurs(self.player)
         elif symbol == arcade.key.NUM_ADD:
             ch.add_points(self.player)
         elif symbol == arcade.key.NUM_SUBTRACT:

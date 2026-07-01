@@ -123,7 +123,8 @@ class SettingView(arcade.View):
                 print("Could not save config:", e)
 
     def apply_volume(self) -> None:
-        self.last_view.music_player.volume = self.volume / 100
+        if hasattr(self.last_view, "music_player"):
+            self.last_view.music_player.volume = self.volume / 100
 
     def execute_action(self) -> None:
         if self.selected_index == 1:
