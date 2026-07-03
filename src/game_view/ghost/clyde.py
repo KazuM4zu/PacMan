@@ -19,7 +19,8 @@ class Clyde:
         manager (Any): The GhostManager instance that owns all ghosts.
         map (Any): The current level map (grid, cells, walls, etc.).
         player (Any): The player instance being chased or fled from.
-        cell_pos (List[int]): Ghost position in grid-cell coordinates ``[x, y]``.
+        cell_pos (List[int]): Ghost position in grid-cell coordinates
+        ``[x, y]``.
         pos (List[float]): Ghost position in pixel coordinates ``[x, y]``.
         dir (Tuple[int, int]): Current movement direction ``(dx, dy)``.
         dx (int): Horizontal component of the current direction.

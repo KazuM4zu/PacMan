@@ -82,7 +82,8 @@ class GhostManager:
         self.inky.draw()
 
     def update(self) -> None:
-        """Update the state (position, direction, collisions) of all four ghosts.
+        """Update the state (position, direction, collisions) of all four
+        ghosts.
 
         Returns:
             None

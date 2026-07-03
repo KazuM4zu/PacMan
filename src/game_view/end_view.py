@@ -6,7 +6,8 @@ from scoreboard_view.scoreview import ScoreView
 
 
 class EndView(arcade.View):
-    """Display the game result, allow score saving, and navigate back to menu."""
+    """Display the game result, allow score saving,
+    and navigate back to menu."""
 
     def __init__(
         self,
@@ -189,7 +190,8 @@ class EndView(arcade.View):
             s: The string to validate.
 
         Returns:
-            True if the string contains only alphanumeric characters and spaces.
+            True if the string contains only alphanumeric
+            characters and spaces.
         """
         return all(c.isalpha() or c.isspace() or c.isnumeric() for c in s)
 

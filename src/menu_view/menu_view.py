@@ -115,7 +115,8 @@ class MenuView(arcade.View):
         self.manager.disable()
 
     def update_position(self) -> None:
-        """Position the menu text and decorative sprites for the current window size.
+        """Position the menu text and decorative sprites for the current
+        window size.
 
         Returns:
             None

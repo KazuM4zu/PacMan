@@ -5,7 +5,8 @@ from typing import Any
 
 
 class ScoreView(arcade.View):
-    """Show the current leaderboard and let the user return to the previous view."""
+    """Show the current leaderboard and let the user return to the previous
+    view."""
 
     def __init__(self, scoreboard: Scoreboard,
                  last_view: arcade.View, config_data: Any) -> None:
@@ -50,7 +51,8 @@ class ScoreView(arcade.View):
         self.back_selected = False
 
     def update_position(self) -> None:
-        """Position the title, back label, and score entries for the current window size.
+        """Position the title, back label, and score entries for the current
+        window size.
 
         Returns:
             None
