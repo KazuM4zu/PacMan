@@ -11,7 +11,7 @@ install:
 
 run:
 	@clear
-	@uv run src/ $(CONFIG)
+	@uv run src/pac-man.py $(CONFIG)
 
 debug:
 	@clear
@@ -33,13 +33,6 @@ lint:
 	@status=0; \
 	uv run flake8 $(SRC) || status=$$?; \
 	uv run mypy $(SRC) $(FLAGS) || status=$$?; \
-	exit $$status
-
-lint-strict:
-	@clear
-	@status=0; \
-	uv run flake8 $(SRC) || status=$$?; \
-	uv run mypy $(SRC) $(FLAGS) --strict || status=$$?; \
 	exit $$status
 
 .PHONY: install run debug clean fclean lint lint-strict
