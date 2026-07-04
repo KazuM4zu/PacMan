@@ -90,8 +90,10 @@ class CheatPanel(PanelInterface):
         """
         if symbol == arcade.key.I:
             ch.set_invicible(self.player)
+            self.b_invicible = not self.b_invicible
         elif symbol == arcade.key.F:
             ch.freeze_minotaurs(self.player)
+            self.b_freeze = not self.b_freeze
         elif symbol == arcade.key.NUM_ADD:
             ch.add_points(self.player)
         elif symbol == arcade.key.NUM_SUBTRACT:
