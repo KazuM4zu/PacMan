@@ -1,6 +1,6 @@
 import arcade.gui as gui
 import arcade
-from game_view.game_menu.panel import PanelInterface
+from src.game_view.game_menu.panel import PanelInterface
 from typing import Any, Dict, List
 
 
@@ -164,10 +164,10 @@ class MenuEchapPanel(PanelInterface):
         elif selected == "Back to Menu":
             if self.view.music and self.view.music_player:
                 self.view.music.stop(self.view.music_player)
-            from menu_view.menu_view import MenuView
+            from src.menu_view.menu_view import MenuView
             menu = MenuView(self.view.config_data)
             self.view.window.show_view(menu)
         elif selected == "Settings":
-            from setting_view.settings import SettingView
+            from src.setting_view.settings import SettingView
             setting = SettingView(self.view, self.view.config_data)
             self.view.window.show_view(setting)

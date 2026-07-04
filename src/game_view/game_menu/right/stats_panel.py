@@ -1,7 +1,7 @@
 import arcade
 import arcade.gui as gui
 from arcade.clock import GLOBAL_CLOCK
-from game_view.game_menu.panel import PanelInterface
+from src.game_view.game_menu.panel import PanelInterface
 
 
 class StatPanel(PanelInterface):

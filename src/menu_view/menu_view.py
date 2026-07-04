@@ -5,11 +5,11 @@ import arcade.gui
 import pyglet
 
 
-from game_view.game_view import GameView
-from setting_view.settings import SettingView
-from scoreboard_view.scoreboard import Scoreboard
-from scoreboard_view.scoreview import ScoreView
-from menu_view.menu_instru import InstrucView
+from src.game_view.game_view import GameView
+from src.setting_view.settings import SettingView
+from src.scoreboard_view.scoreboard import Scoreboard
+from src.scoreboard_view.scoreview import ScoreView
+from src.menu_view.menu_instru import InstrucView
 
 from typing import Any, List, Optional, cast
 

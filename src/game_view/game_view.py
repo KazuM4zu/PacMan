@@ -1,12 +1,12 @@
-from game_view.map import Map
-from .end_view import EndView
-from game_view.player import Player
-from scoreboard_view.scoreboard import Scoreboard
-from game_view.ghost.ghost_manager import GhostManager
-from game_view.game_menu.left.echap_panel import MenuEchapPanel
-from game_view.game_menu.left.cheat_panel import CheatPanel
-from game_view.game_menu.right.stats_panel import StatPanel
-from game_view.game_menu.right.leader_panel import LeadPanel
+from src.game_view.map import Map
+from src.game_view.end_view import EndView
+from src.game_view.player import Player
+from src.scoreboard_view.scoreboard import Scoreboard
+from src.game_view.ghost.ghost_manager import GhostManager
+from src.game_view.game_menu.left.echap_panel import MenuEchapPanel
+from src.game_view.game_menu.left.cheat_panel import CheatPanel
+from src.game_view.game_menu.right.stats_panel import StatPanel
+from src.game_view.game_menu.right.leader_panel import LeadPanel
 
 import arcade.key as key
 import arcade.gui as gui
@@ -213,6 +213,8 @@ class GameView(arcade.View):
             x, y = self.player.cell_pos
             self.player.pos = list(self.player.map.grid[y][x])
             self.player.speed = self.player.map.cell // 16
+            self.player.next_dx = 0
+            self.player.next_dy = 0
             self.ghost_manager.reset_ghost(self.map)
         self.index_level += 1
         if self.stat_panel is not None:

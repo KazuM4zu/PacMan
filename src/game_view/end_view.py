@@ -1,8 +1,8 @@
 import arcade
 import arcade.gui as gui
 from typing import Dict, Any
-from scoreboard_view.scoreboard import Scoreboard
-from scoreboard_view.scoreview import ScoreView
+from src.scoreboard_view.scoreboard import Scoreboard
+from src.scoreboard_view.scoreview import ScoreView
 
 
 class EndView(arcade.View):
@@ -179,7 +179,7 @@ class EndView(arcade.View):
         """
         if self.music and self.music_player:
             self.music.stop(player=self.music_player)
-        from menu_view.menu_view import MenuView
+        from src.menu_view.menu_view import MenuView
         mv = MenuView(self.config_data)
         self.window.show_view(mv)
 
@@ -216,7 +216,7 @@ class EndView(arcade.View):
             self.sc.update_score(username_str, self.player.score)
             if self.music and self.music_player:
                 self.music.stop(player=self.music_player)
-            from menu_view.menu_view import MenuView
+            from src.menu_view.menu_view import MenuView
             mv = MenuView(self.config_data)
             self.scoreboard_view = ScoreView(self.sc, mv,
                                              self.config_data)

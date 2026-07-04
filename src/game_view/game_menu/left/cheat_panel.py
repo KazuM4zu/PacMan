@@ -1,7 +1,7 @@
 import arcade.gui as gui
-from game_view.game_menu.panel import PanelInterface
+from src.game_view.game_menu.panel import PanelInterface
 import arcade
-from game_view.cheat import Cheat as ch
+from src.game_view.cheat import Cheat as ch
 
 from typing import Any, Dict, List
 

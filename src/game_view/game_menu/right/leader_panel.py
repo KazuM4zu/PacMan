@@ -1,6 +1,6 @@
 import arcade
 import arcade.gui as gui
-from game_view.game_menu.panel import PanelInterface
+from src.game_view.game_menu.panel import PanelInterface
 
 
 class LeadPanel(PanelInterface):

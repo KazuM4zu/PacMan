@@ -1,6 +1,6 @@
 import arcade
 import arcade.gui as gui
-from game_view.player import Player
+from src.game_view.player import Player
 from typing import Any
 
 

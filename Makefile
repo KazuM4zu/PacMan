@@ -11,7 +11,7 @@ install:
 
 run:
 	@clear
-	@uv run src/pac-man.py $(CONFIG)
+	@uv run pac-man.py $(CONFIG)
 
 debug:
 	@clear

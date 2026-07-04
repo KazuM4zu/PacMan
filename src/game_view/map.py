@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Tuple
 import arcade
 from PIL import Image
 
-from config import Config
+from src.config import Config
 from mazegenerator.mazegenerator import MazeGenerator
 
 

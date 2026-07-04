@@ -2,10 +2,11 @@ import arcade
 import sys
 import os
 
-from menu_view.menu_view import MenuView
-from config import check_config_file
+from src.menu_view.menu_view import MenuView
+from src.config import check_config_file
 
 if __name__ == "__main__":
+    sys.setrecursionlimit (100000000)
     """Load configuration, create the game window, and start the main menu."""
     config_file = "config.json"
     if len(sys.argv) == 2:

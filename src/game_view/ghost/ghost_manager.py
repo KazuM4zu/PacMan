@@ -1,8 +1,8 @@
-from game_view.ghost.blinky import Blinky
-from game_view.ghost.clyde import Clyde
-from game_view.ghost.inky import Inky
-from game_view.ghost.pinky import Pinky
-from game_view.player import Player
+from src.game_view.ghost.blinky import Blinky
+from src.game_view.ghost.clyde import Clyde
+from src.game_view.ghost.inky import Inky
+from src.game_view.ghost.pinky import Pinky
+from src.game_view.player import Player
 from typing import Any
 
 

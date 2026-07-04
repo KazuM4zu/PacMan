@@ -1,4 +1,4 @@
-from scoreboard_view.scoreboard import Scoreboard
+from src.scoreboard_view.scoreboard import Scoreboard
 import arcade
 import arcade.gui as gui
 from typing import Any
