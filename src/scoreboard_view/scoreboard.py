@@ -7,12 +7,15 @@ import sys
 
 class Scoreboard:
     """Manage the game's saved scoreboard entries on disk."""
+    file_path: Path = (
+        Path(__file__).resolve().parent.parent.parent / "scoreboard.json"
+    )
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
         os.chdir(sys._MEIPASS)
-        file_path: Path = Path.home() / ".dark_man"
+        file_path = Path.home() / ".dark_man"
     else:
-        file_path: Path = (Path(__file__).parent.parent.parent
-                           / "scoreboard.json")
+        file_path = (Path(__file__).parent.parent.parent
+                     / "scoreboard.json")
 
     def __init__(self) -> None:
         """Load existing scoreboard data or create a new file if needed.

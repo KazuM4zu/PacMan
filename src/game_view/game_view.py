@@ -81,6 +81,7 @@ class GameView(arcade.View):
         self.stat_panel: Optional[StatPanel] = None
         self.map: Optional[Map] = None
         self.player: Optional[Player] = None
+        self.ghost_manager: GhostManager
         self.music: Optional[arcade.Sound] = None
         self.music_player: Optional[Any]
 
@@ -98,6 +99,10 @@ class GameView(arcade.View):
             self.music_player = None
 
         self.generate_level()
+        if self.map is None:
+            raise RuntimeError("Map was not initialized")
+        if self.player is None:
+            raise RuntimeError("Player was not initialized")
         self.ghost_manager = GhostManager(self.map, self.player)
         self.setup_ui()
 
@@ -115,6 +120,9 @@ class GameView(arcade.View):
         Returns:
             None
         """
+        if self.player is None:
+            raise RuntimeError("Player was not initialized")
+
         panel_width: int = (self.window.width // 4) - 10
         self.top_anchor = gui.UIAnchorLayout()
         txt: str = ""
@@ -202,7 +210,7 @@ class GameView(arcade.View):
             self.window.show_view(win)
             return
         self.map = Map(self.config_data, self.index_level,
-                       (self.window.width, self.window.height))
+                       [self.window.width, self.window.height])
         self.map.generate_maze()
         if self.index_level == 0:
             self.player = Player(self.map, self.config_data)
